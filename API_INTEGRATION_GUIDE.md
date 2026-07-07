@@ -141,6 +141,12 @@ if (host === 'localhost' || host === '127.0.0.1' || urlParams.get('mock') === 't
 *   When `isLocalMock` is `true`, it bypasses network CORS and live basic auth entirely by reading local mock JSON files from the `/API sample json/` directory.
 *   Once backend Basic Authentication and CORS are fixed on your dev servers, access the site normally (without `?mock=true`) to fetch from the live endpoints.
 
+### 🔀 Path-Based Routing Implementation
+To support clean path-based URLs (like `/locn-dev-397`) instead of traditional query parameters, we have implemented path-based routing:
+1.  **Frontend Extraction**: The frontend automatically parses the `locationId` from the URL path segment using `window.location.pathname`.
+2.  **Server Rewrites (.htaccess)**: We have added a `.htaccess` file in the root directory to handle internal rewrites on Apache/Hostinger. This forwards URLs like `/locn-dev-397` internally to `index.html` without triggering 404 errors.
+    *   *Note: If your production backend uses Nginx or a Node.js server, make sure to configure a corresponding rewrite rule (SPA routing) so that all dynamic paths fall back to `index.html`.*
+
 ### 🧪 Example Testing URLs:
 *   **Path-Based Route (Mock)**: `https://buzl.rclk.in/locn-dev-397?mock=true` (Extracts `locn-dev-397` from path, runs in Mock Mode)
 *   **Query-Based Route (Mock)**: `https://buzl.rclk.in/?locationId=locn-dev-269&mock=true` (Extracts `locn-dev-269` from query param, runs in Mock Mode)
