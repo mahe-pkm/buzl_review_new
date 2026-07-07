@@ -1,0 +1,31 @@
+{
+    "resp": {
+        "locId": "locn-dev-269",
+        "scope": "location",
+        "count": 1,
+        "questions": [
+            {
+                "_id": "6a43e328e6de60db9817b7b7",
+                "qid": "rvq-9b66a6d5-cd45-4598-a351-c0d486124176",
+                "scope": "location",
+                "locId": "locn-dev-269",
+                "bussId": "buss-1",
+                "question": "How were the faculty?",
+                "responseGuidance": {
+                    "location": "Santhiya Chandran IAS Academy",
+                    "keyword": "",
+                    "aspect": "staff"
+                },
+                "suggestedResponses": [
+                    "Excellent",
+                    "Knowledgeable",
+                    "Average",
+                    "Disappointing"
+                ],
+                "status": "active",
+                "createdAt": "2026-06-30T15:39:20.164Z",
+                "createdBy": "user-6595"
+            }
+        ]
+    }
+}

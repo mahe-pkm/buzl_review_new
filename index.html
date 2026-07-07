@@ -1349,6 +1349,41 @@
       outline-offset: 2.5px;
       box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25) !important;
     }
+
+    /* Review Variants Tabs Styling */
+    .variants-tab-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+    .variant-tab {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all var(--transition-fast);
+    }
+    .variant-tab:hover {
+      background: var(--border-color);
+      color: var(--text-main);
+    }
+    .variant-tab.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+    }
+    .variant-tab:focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
@@ -1436,104 +1471,110 @@
         
         <!-- STEP 1 -->
         <div class="form-step active" id="step-1">
-          <div class="form-group">
-            <label class="form-label">Which service did you use?</label>
-            <div class="options-grid">
-              <div class="option-card" onclick="selectService(this, 'Website Development')">
-                <div class="option-icon">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                  </svg>
+          <!-- Dynamic Questions Container -->
+          <div id="dynamic-questions-container" style="display: none;"></div>
+          
+          <!-- Static Fallback Questions -->
+          <div id="static-questions-container">
+            <div class="form-group">
+              <label class="form-label">Which service did you use?</label>
+              <div class="options-grid">
+                <div class="option-card" onclick="selectService(this, 'Website Development')">
+                  <div class="option-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                  </div>
+                  <span class="option-label">Website Development</span>
+                  <div class="option-indicator"></div>
                 </div>
-                <span class="option-label">Website Development</span>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectService(this, 'Shopify / E-commerce')">
-                <div class="option-icon">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                  </svg>
+                <div class="option-card" onclick="selectService(this, 'Shopify / E-commerce')">
+                  <div class="option-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                  </div>
+                  <span class="option-label">Shopify / E-commerce</span>
+                  <div class="option-indicator"></div>
                 </div>
-                <span class="option-label">Shopify / E-commerce</span>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectService(this, 'WordPress Website')">
-                <div class="option-icon">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                  </svg>
+                <div class="option-card" onclick="selectService(this, 'WordPress Website')">
+                  <div class="option-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                    </svg>
+                  </div>
+                  <span class="option-label">WordPress Website</span>
+                  <div class="option-indicator"></div>
                 </div>
-                <span class="option-label">WordPress Website</span>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectService(this, 'Digital Marketing')">
-                <div class="option-icon">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.003 9.003 0 1020.945 13H11V3.055z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-                  </svg>
+                <div class="option-card" onclick="selectService(this, 'Digital Marketing')">
+                  <div class="option-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.003 9.003 0 1020.945 13H11V3.055z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                    </svg>
+                  </div>
+                  <span class="option-label">Digital Marketing</span>
+                  <div class="option-indicator"></div>
                 </div>
-                <span class="option-label">Digital Marketing</span>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectService(this, 'Branding / Logo Design')">
-                <div class="option-icon">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                  </svg>
+                <div class="option-card" onclick="selectService(this, 'Branding / Logo Design')">
+                  <div class="option-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                  </div>
+                  <span class="option-label">Branding / Logo Design</span>
+                  <div class="option-indicator"></div>
                 </div>
-                <span class="option-label">Branding / Logo Design</span>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectService(this, 'AI Image / Creative Work')">
-                <div class="option-icon">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                  </svg>
+                <div class="option-card" onclick="selectService(this, 'AI Image / Creative Work')">
+                  <div class="option-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    </svg>
+                  </div>
+                  <span class="option-label">AI Image / Creative Work</span>
+                  <div class="option-indicator"></div>
                 </div>
-                <span class="option-label">AI Image / Creative Work</span>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectService(this, 'Business Automation')">
-                <div class="option-icon">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                <div class="option-card" onclick="selectService(this, 'Business Automation')">
+                  <div class="option-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <span class="option-label">Business Automation</span>
+                  <div class="option-indicator"></div>
                 </div>
-                <span class="option-label">Business Automation</span>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectService(this, 'Other Service')">
-                <div class="option-icon">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
-                  </svg>
+                <div class="option-card" onclick="selectService(this, 'Other Service')">
+                  <div class="option-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                    </svg>
+                  </div>
+                  <span class="option-label">Other Service</span>
+                  <div class="option-indicator"></div>
                 </div>
-                <span class="option-label">Other Service</span>
-                <div class="option-indicator"></div>
               </div>
             </div>
-          </div>
 
-          <div class="form-group" id="experience-group">
-            <label class="form-label">How was your overall experience?</label>
-            <div class="experience-grid">
-              <div class="option-card exp-card exp-excellent" onclick="selectExperience(this, 'Excellent')">
-                <div class="exp-emoji">😊</div>
-                <span class="option-label">Excellent</span>
-              </div>
-              <div class="option-card exp-card exp-good" onclick="selectExperience(this, 'Good')">
-                <div class="exp-emoji">🙂</div>
-                <span class="option-label">Good</span>
-              </div>
-              <div class="option-card exp-card exp-average" onclick="selectExperience(this, 'Average')">
-                <div class="exp-emoji">😐</div>
-                <span class="option-label">Average</span>
-              </div>
-              <div class="option-card exp-card exp-needs-improvement" onclick="selectExperience(this, 'Needs Improvement')">
-                <div class="exp-emoji">⚠️</div>
-                <span class="option-label">Needs Imp.</span>
+            <div class="form-group" id="experience-group">
+              <label class="form-label">How was your overall experience?</label>
+              <div class="experience-grid">
+                <div class="option-card exp-card exp-excellent" onclick="selectExperience(this, 'Excellent')">
+                  <div class="exp-emoji">😊</div>
+                  <span class="option-label">Excellent</span>
+                </div>
+                <div class="option-card exp-card exp-good" onclick="selectExperience(this, 'Good')">
+                  <div class="exp-emoji">🙂</div>
+                  <span class="option-label">Good</span>
+                </div>
+                <div class="option-card exp-card exp-average" onclick="selectExperience(this, 'Average')">
+                  <div class="exp-emoji">😐</div>
+                  <span class="option-label">Average</span>
+                </div>
+                <div class="option-card exp-card exp-needs-improvement" onclick="selectExperience(this, 'Needs Improvement')">
+                  <div class="exp-emoji">⚠️</div>
+                  <span class="option-label">Needs Imp.</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1751,6 +1792,9 @@
           <span class="star-preview-text" id="draft-star-text"></span>
         </div>
 
+        <!-- Variants Tabs Container -->
+        <div class="variants-tab-container" id="variants-tab-container" style="display: none;"></div>
+
         <div class="draft-textarea-wrapper">
           <textarea class="textarea-custom draft-textarea" id="draft-textarea" aria-label="Generated Review Draft"></textarea>
           <div class="draft-edit-badge">
@@ -1907,21 +1951,323 @@
     // State storage
     const state = {
       currentStep: 1,
-      service: '',
-      experience: '',
-      likes: [],
+      locationId: '',
+      isDynamic: false,
+      questions: [],
+      answers: {}, // Stores qid -> selectedResponse text
+      service: '', // Fallback
+      experience: '', // Fallback
+      likes: [], // Fallback
       detail: '',
       style: 'Simple',
-      language: 'English'
+      language: 'English',
+      apiVariants: [] // Stores generated review text variants
     };
 
-    const GOOGLE_REVIEW_LINK = 'https://search.google.com/local/writereview?placeid=ChIJK6_papbChmgRCAqryUDNfYU';
+    // Configuration for APIs
+    const API_CONFIG = {
+      baseUrl: 'https://dev.web.gobuzl.com/api',
+      isLocalMock: false, // Set dynamically based on host
+      getQuestionsUrl: (locId) => {
+        if (API_CONFIG.isLocalMock) {
+          return `./API%20sample%20json/reviewquestions-locn-dev-269.json`;
+        }
+        return `${API_CONFIG.baseUrl}/locations/${locId}/reviewquestions`;
+      },
+      getGenerationUrl: (locId) => {
+        if (API_CONFIG.isLocalMock) {
+          return `./API%20sample%20json/reviewsgeneration.txt`;
+        }
+        return `${API_CONFIG.baseUrl}/locations/${locId}/reviewsgeneration`;
+      },
+      getAuthHeader: (locId) => {
+        // Basic Auth with locationId as username and empty password
+        return 'Basic ' + btoa(locId + ':');
+      }
+    };
+
+    // Detect if running locally or if ?mock=true is in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1' || urlParams.get('mock') === 'true') {
+      API_CONFIG.isLocalMock = true;
+    }
+
+    let GOOGLE_REVIEW_LINK = 'https://search.google.com/local/writereview?placeid=ChIJK6_papbChmgRCAqryUDNfYU';
 
     // Step navigation progress titles
     const stepTitles = [
       'Step 1 of 2 — Tell us about your experience',
       'Step 2 of 2 — Customize your review'
     ];
+
+    // --- Dynamic API Helpers ---
+
+    function extractLocationId() {
+      // 1. Check URL search query parameters
+      let locId = urlParams.get('locationId') || urlParams.get('locId') || urlParams.get('placeid');
+      if (locId) return locId;
+
+      // 2. Check URL path segments (e.g. buzl.rclk.in/locn-dev-397)
+      const path = window.location.pathname;
+      const segments = path.split('/').filter(s => s.trim() !== '');
+      if (segments.length > 0) {
+        const lastSegment = segments[segments.length - 1];
+        // Ensure it's not index.html, static pages, or empty
+        if (lastSegment && !lastSegment.includes('.') && lastSegment !== 'index' && lastSegment !== 'index.html') {
+          return lastSegment;
+        }
+      }
+      return null;
+    }
+
+    function updateBrandUI(name) {
+      if (!name) return;
+      const brandNameElem = document.querySelector('.brand-name');
+      if (brandNameElem) {
+        brandNameElem.textContent = name;
+      }
+      const heroSubtitleElem = document.querySelector('.hero-subtitle');
+      if (heroSubtitleElem) {
+        heroSubtitleElem.innerHTML = `Answer a few simple questions and get a review draft based on your real experience with <strong>${name}</strong>.`;
+      }
+    }
+
+    function useStaticFallbackFlow() {
+      state.isDynamic = false;
+      const dynamicContainer = document.getElementById('dynamic-questions-container');
+      const staticContainer = document.getElementById('static-questions-container');
+      if (dynamicContainer) dynamicContainer.style.display = 'none';
+      if (staticContainer) staticContainer.style.display = 'block';
+      updateBrandUI('𝐁𝐮𝐳𝐥 𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬');
+    }
+
+    async function loadDynamicQuestions() {
+      const locId = state.locationId;
+      if (!locId) {
+        useStaticFallbackFlow();
+        return;
+      }
+
+      const dynamicContainer = document.getElementById('dynamic-questions-container');
+      const staticContainer = document.getElementById('static-questions-container');
+      
+      if (dynamicContainer) {
+        dynamicContainer.innerHTML = `
+          <div style="padding: 2.5rem 1rem; text-align: center; color: var(--text-muted);">
+            <div class="voice-pulse-circle" style="animation: pulse 1.5s infinite; margin: 0 auto 1rem; background: var(--primary); width: 24px; height: 24px; border-radius: 50%;"></div>
+            <p style="font-weight: 600; color: var(--text-main);">Fetching review questions...</p>
+          </div>
+        `;
+        dynamicContainer.style.display = 'block';
+      }
+      if (staticContainer) staticContainer.style.display = 'none';
+
+      try {
+        const url = API_CONFIG.getQuestionsUrl(locId);
+        const headers = new Headers();
+        if (!API_CONFIG.isLocalMock) {
+          headers.append("Authorization", API_CONFIG.getAuthHeader(locId));
+        }
+
+        const response = await fetch(url, { headers });
+        if (!response.ok) {
+          throw new Error(`Questions API response error (status ${response.status})`);
+        }
+        
+        const data = await response.json();
+        
+        if (data && data.resp && data.resp.questions && data.resp.questions.length > 0) {
+          state.questions = data.resp.questions;
+          state.isDynamic = true;
+          
+          // Try to update brand name
+          if (state.questions[0].responseGuidance && state.questions[0].responseGuidance.location) {
+            updateBrandUI(state.questions[0].responseGuidance.location);
+          }
+          
+          // Dynamically update redirect links if Place ID returned
+          if (data.resp.placeId) {
+            GOOGLE_REVIEW_LINK = `https://search.google.com/local/writereview?placeid=${data.resp.placeId}`;
+          } else if (data.resp.googlePlaceId) {
+            GOOGLE_REVIEW_LINK = `https://search.google.com/local/writereview?placeid=${data.resp.googlePlaceId}`;
+          } else if (data.resp.reviewUrl) {
+            GOOGLE_REVIEW_LINK = data.resp.reviewUrl;
+          }
+          
+          renderDynamicQuestions(state.questions);
+        } else {
+          throw new Error("Empty questions list received.");
+        }
+      } catch (err) {
+        console.error("Failed to load dynamic configuration:", err);
+        showToast("Using default fallback review template.", "error");
+        useStaticFallbackFlow();
+      }
+    }
+
+    function makeElementAccessible(element, clickCallback) {
+      element.setAttribute('tabindex', '0');
+      element.setAttribute('role', 'button');
+      element.addEventListener('keydown', function(e) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          clickCallback();
+        }
+      });
+    }
+
+    function renderDynamicQuestions(questions) {
+      const container = document.getElementById('dynamic-questions-container');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      questions.forEach((q, index) => {
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
+        formGroup.id = `dynamic-group-${q.qid}`;
+        
+        const label = document.createElement('label');
+        label.className = 'form-label';
+        label.textContent = q.question;
+        formGroup.appendChild(label);
+        
+        const grid = document.createElement('div');
+        grid.className = 'options-grid';
+        
+        // Add specific class for experience grids if suggested responses is 4 options
+        if (q.suggestedResponses.length === 4) {
+          grid.className = 'experience-grid';
+        }
+        
+        q.suggestedResponses.forEach(resp => {
+          const card = document.createElement('div');
+          card.className = 'option-card';
+          
+          // Handle specific styling for experience ratings if applicable
+          if (q.suggestedResponses.length === 4) {
+            card.classList.add('exp-card');
+            if (resp.toLowerCase().includes('excellent') || resp.toLowerCase().includes('perfect') || resp.toLowerCase().includes('great')) {
+              card.classList.add('exp-excellent');
+            } else if (resp.toLowerCase().includes('good') || resp.toLowerCase().includes('knowledgeable')) {
+              card.classList.add('exp-good');
+            } else if (resp.toLowerCase().includes('average') || resp.toLowerCase().includes('satisfactory')) {
+              card.classList.add('exp-average');
+            } else {
+              card.classList.add('exp-needs-improvement');
+            }
+          }
+          
+          if (state.answers[q.qid] === resp) {
+            card.classList.add('selected');
+          }
+          
+          // Render inner content (with nice default checkbox/checkmark icons or emojis)
+          let innerIcon = `
+            <div class="option-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          `;
+          if (q.suggestedResponses.length === 4) {
+            let emoji = '🙂';
+            if (resp.toLowerCase().includes('excellent') || resp.toLowerCase().includes('perfect') || resp.toLowerCase().includes('great')) emoji = '😊';
+            if (resp.toLowerCase().includes('average') || resp.toLowerCase().includes('satisfactory')) emoji = '😐';
+            if (resp.toLowerCase().includes('disappointing') || resp.toLowerCase().includes('poor') || resp.toLowerCase().includes('needs improvement')) emoji = '⚠️';
+            innerIcon = `<div class="exp-emoji">${emoji}</div>`;
+          }
+          
+          card.innerHTML = `
+            ${innerIcon}
+            <span class="option-label">${resp}</span>
+            <div class="option-indicator"></div>
+          `;
+          
+          const selectFn = () => selectDynamicResponse(card, q.qid, resp);
+          card.onclick = selectFn;
+          makeElementAccessible(card, selectFn);
+          
+          grid.appendChild(card);
+        });
+        
+        formGroup.appendChild(grid);
+        container.appendChild(formGroup);
+      });
+    }
+
+    function selectDynamicResponse(element, qid, responseVal) {
+      const siblingCards = element.parentElement.querySelectorAll('.option-card');
+      siblingCards.forEach(card => card.classList.remove('selected'));
+      element.classList.add('selected');
+      triggerPulse(element);
+      
+      state.answers[qid] = responseVal;
+      clearWarning();
+      
+      // Auto-scroll to next group or next step button
+      const currentGroup = element.closest('.form-group');
+      const nextGroup = currentGroup.nextElementSibling;
+      if (nextGroup && nextGroup.style.display !== 'none' && nextGroup.classList.contains('form-group')) {
+        nextGroup.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        const btnNext = document.getElementById('btn-next');
+        if (btnNext) {
+          btnNext.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    }
+
+    function inferExperienceLevel() {
+      if (!state.isDynamic) return state.experience;
+      
+      const answersList = Object.values(state.answers).map(a => a.toLowerCase());
+      if (answersList.some(a => ['excellent', 'outstanding', 'amazing', 'perfect', 'great', 'extremely happy', 'superb'].some(k => a.includes(k)))) {
+        return 'Excellent';
+      }
+      if (answersList.some(a => ['good', 'friendly', 'knowledgeable', 'satisfied'].some(k => a.includes(k)))) {
+        return 'Good';
+      }
+      if (answersList.some(a => ['average', 'ok', 'okay', 'satisfactory', 'normal'].some(k => a.includes(k)))) {
+        return 'Average';
+      }
+      if (answersList.some(a => ['disappointing', 'poor', 'bad', 'needs improvement', 'slow', 'difficult'].some(k => a.includes(k)))) {
+        return 'Needs Improvement';
+      }
+      return 'Excellent'; // default fallback
+    }
+
+    function renderVariantsTabs(variants) {
+      const container = document.getElementById('variants-tab-container');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      container.style.display = 'flex';
+      
+      variants.forEach((v, index) => {
+        const tab = document.createElement('div');
+        tab.className = 'variant-tab';
+        if (index === 0) {
+          tab.classList.add('active');
+        }
+        tab.textContent = `Draft Variant ${index + 1}`;
+        
+        const selectTabFn = () => {
+          container.querySelectorAll('.variant-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById('draft-textarea').value = v.text;
+          updateDraftMetrics(v.text);
+        };
+        
+        tab.onclick = selectTabFn;
+        makeElementAccessible(tab, selectTabFn);
+        
+        container.appendChild(tab);
+      });
+    }
+
+    // --- End Dynamic API Helpers ---
 
     // Scroll smoothly to Form card
     function scrollToForm() {
@@ -2011,10 +2357,19 @@
       const warningMessage = document.getElementById('warning-message');
 
       if (state.currentStep === 1) {
-        if (!state.service || !state.experience) {
-          warningMessage.textContent = 'Please select a service and rate your experience to proceed.';
-          warningBanner.style.display = 'flex';
-          return;
+        if (state.isDynamic) {
+          const unansweredCount = state.questions.length - Object.keys(state.answers).length;
+          if (unansweredCount > 0) {
+            warningMessage.textContent = 'Please answer all questions to proceed.';
+            warningBanner.style.display = 'flex';
+            return;
+          }
+        } else {
+          if (!state.service || !state.experience) {
+            warningMessage.textContent = 'Please select a service and rate your experience to proceed.';
+            warningBanner.style.display = 'flex';
+            return;
+          }
         }
         clearWarning();
         transitionStep(1, 2);
@@ -2296,20 +2651,95 @@
     }
 
     // Simulated loading and review display
-    function generateReviewProcess() {
+    // Dynamic review generation (API 2) or static fallback
+    async function generateReviewProcess() {
       document.getElementById('assistant-form').style.display = 'none';
       document.getElementById('progress-wrapper').style.display = 'none';
       document.getElementById('loading-screen').style.display = 'flex';
 
-      setTimeout(() => {
-        document.getElementById('loading-screen').style.display = 'none';
-        const reviewText = generateReviewDraftText();
-        document.getElementById('draft-textarea').value = reviewText;
-        updateStarPreview('draft-star-preview', 'draft-star-text', state.experience);
-        updateDraftMetrics(reviewText);
-        document.getElementById('draft-section').style.display = 'block';
-        scrollToForm();
-      }, 1000);
+      // Hide variants tabs by default
+      const tabsContainer = document.getElementById('variants-tab-container');
+      if (tabsContainer) tabsContainer.style.display = 'none';
+
+      if (state.isDynamic) {
+        try {
+          const locId = state.locationId;
+          const url = API_CONFIG.getGenerationUrl(locId);
+          
+          const payload = {
+            language: state.language === 'Tamil' ? 'ta' : (state.language === 'Tamil-English Mix' ? 'ta-en' : 'en'),
+            writingStyle: state.style,
+            answers: Object.entries(state.answers).map(([qid, response]) => ({
+              qid,
+              response
+            })),
+            customDetail: state.detail
+          };
+
+          const headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          if (!API_CONFIG.isLocalMock) {
+            headers.append("Authorization", API_CONFIG.getAuthHeader(locId));
+          }
+
+          const method = API_CONFIG.isLocalMock ? 'GET' : 'POST';
+          const fetchOptions = {
+            method,
+            headers
+          };
+          if (method === 'POST') {
+            fetchOptions.body = JSON.stringify(payload);
+          }
+
+          const response = await fetch(url, fetchOptions);
+          if (!response.ok) {
+            throw new Error(`Generation failed (status ${response.status})`);
+          }
+
+          const data = await response.json();
+          document.getElementById('loading-screen').style.display = 'none';
+
+          if (data && data.resp && data.resp.variants && data.resp.variants.length > 0) {
+            state.apiVariants = data.resp.variants;
+            renderVariantsTabs(state.apiVariants);
+            
+            const initialText = state.apiVariants[0].text;
+            document.getElementById('draft-textarea').value = initialText;
+            
+            const exp = inferExperienceLevel();
+            updateStarPreview('draft-star-preview', 'draft-star-text', exp);
+            updateDraftMetrics(initialText);
+            
+            document.getElementById('draft-section').style.display = 'block';
+            scrollToForm();
+          } else {
+            throw new Error("No variants found in generation API response.");
+          }
+        } catch (err) {
+          console.error("API 2 generation error:", err);
+          showToast("Error generating review. Using fallback templates.", "error");
+          document.getElementById('loading-screen').style.display = 'none';
+          
+          // Force fallback to static generation
+          state.isDynamic = false;
+          generateStaticReview();
+        }
+      } else {
+        // Fallback static generation
+        setTimeout(() => {
+          document.getElementById('loading-screen').style.display = 'none';
+          generateStaticReview();
+        }, 1000);
+      }
+    }
+
+    function generateStaticReview() {
+      const reviewText = generateReviewDraftText();
+      document.getElementById('draft-textarea').value = reviewText;
+      updateStarPreview('draft-star-preview', 'draft-star-text', state.experience);
+      updateDraftMetrics(reviewText);
+      document.getElementById('draft-section').style.display = 'block';
+      scrollToForm();
     }
 
     // Go back to edit answers from review draft screen
@@ -2963,10 +3393,14 @@
 
     // Dynamic Regenerate button action
     function regenerateDraft() {
-      const reviewText = generateReviewDraftText();
-      document.getElementById('draft-textarea').value = reviewText;
-      updateDraftMetrics(reviewText);
-      showToast('Draft updated with a new version.');
+      if (state.isDynamic) {
+        generateReviewProcess();
+      } else {
+        const reviewText = generateReviewDraftText();
+        document.getElementById('draft-textarea').value = reviewText;
+        updateDraftMetrics(reviewText);
+        showToast('Draft updated with a new version.');
+      }
     }
 
     // Toggle custom checkbox values
@@ -3125,9 +3559,15 @@
       state.detail = '';
       state.style = 'Simple';
       state.language = 'English';
+      state.answers = {};
+      state.apiVariants = [];
 
       const allSelectables = document.querySelectorAll('.option-card, .chip-item');
       allSelectables.forEach(item => item.classList.remove('selected'));
+
+      if (state.isDynamic) {
+        renderDynamicQuestions(state.questions);
+      }
 
       // Re-apply selected class to default choices
       const styleSimple = document.querySelector('[onclick="selectStyle(this, \'Simple\')"]');
@@ -3195,6 +3635,12 @@
           }
         });
       });
+
+      // Extract locationId and initialize dynamic API loading if present
+      state.locationId = extractLocationId();
+      if (state.locationId) {
+        loadDynamicQuestions();
+      }
     });
 
   </script>

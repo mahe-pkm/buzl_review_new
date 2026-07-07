@@ -1,0 +1,69 @@
+{
+    "resp": {
+        "status": "complete",
+        "sessId": "rv_272889dfaa7e4c23",
+        "language": "en",
+        "variants": [
+            {
+                "index": 0,
+                "text": "The test speed at Santhiya Chandran IAS Academy was very timely, which I really appreciated. Everything moved at a good pace without unnecessary delays."
+            },
+            {
+                "index": 1,
+                "text": "I was impressed by how timely the tests were conducted. The speed and punctuality made the whole experience smooth and efficient."
+            }
+        ],
+        "usage": {
+            "inputTokens": 977,
+            "outputTokens": 87,
+            "cacheCreationTokens": 0,
+            "cacheReadTokens": 0,
+            "totalTokens": 1064
+        },
+        "cost": {
+            "total": 0.004236,
+            "llm": {
+                "total": 0.004236,
+                "input": 0.002931,
+                "output": 0.001305,
+                "cacheWrite": 0,
+                "cacheRead": 0
+            },
+            "external": {
+                "firecrawl": 0,
+                "dataforseo": 0,
+                "googleMaps": 0,
+                "total": 0
+            }
+        },
+        "llmCalls": [
+            {
+                "task": "genReview",
+                "phase": "generate",
+                "usage": {
+                    "inputTokens": 977,
+                    "outputTokens": 87,
+                    "cacheCreationTokens": 0,
+                    "cacheReadTokens": 0,
+                    "totalTokens": 1064
+                },
+                "cost": {
+                    "total": 0.004236,
+                    "llm": {
+                        "total": 0.004236,
+                        "input": 0.002931,
+                        "output": 0.001305,
+                        "cacheWrite": 0,
+                        "cacheRead": 0
+                    },
+                    "external": {
+                        "firecrawl": 0,
+                        "dataforseo": 0,
+                        "googleMaps": 0,
+                        "total": 0
+                    }
+                }
+            }
+        ]
+    }
+}
