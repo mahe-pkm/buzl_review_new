@@ -51,7 +51,7 @@
       padding: 0;
     }
     
-    body {
+    html, body {
       background-color: var(--bg-primary);
       color: var(--text-main);
       font-family: var(--font-sans);
@@ -60,6 +60,7 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
+      width: 100%;
       position: relative;
     }
 
@@ -241,7 +242,7 @@
       background-color: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-card);
-      padding: 1.5rem;
+      padding: 1.25rem;
       text-align: left;
       box-shadow: var(--shadow-sm);
       transition: transform var(--transition-normal), box-shadow var(--transition-normal);
@@ -252,28 +253,41 @@
       box-shadow: var(--shadow-md);
     }
 
+    .feature-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
     .feature-icon {
       background-color: var(--primary-light);
       color: var(--primary);
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1rem;
+      flex-shrink: 0;
+    }
+
+    .feature-icon svg {
+      width: 16px;
+      height: 16px;
     }
 
     .feature-title {
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.937rem;
       color: var(--text-main);
-      margin-bottom: 0.25rem;
+      margin-bottom: 0;
     }
 
     .feature-desc {
-      font-size: 0.875rem;
+      font-size: 0.812rem;
       color: var(--text-secondary);
+      line-height: 1.4;
     }
 
     .hero-trust-note {
@@ -342,13 +356,18 @@
 
     .form-step.active {
       display: block;
-      animation: fadeIn var(--transition-normal);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes slideInFromRight {
+      from { opacity: 0; transform: translateX(50px); }
+      to   { opacity: 1; transform: translateX(0); }
     }
+
+    @keyframes slideInFromLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
 
     /* Options Selection Layout */
     .options-grid {
@@ -363,12 +382,14 @@
       background-color: #FFFFFF;
       border: 1px solid var(--border);
       border-radius: var(--radius-btn);
-      padding: 1rem 1.25rem;
+      padding: 0.75rem 1rem;
+      min-height: 48px;
       cursor: pointer;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 0.75rem;
-      transition: all var(--transition-fast);
+      transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
       user-select: none;
       position: relative;
     }
@@ -378,10 +399,21 @@
       background-color: var(--bg-primary);
     }
 
+    .option-card:active {
+      transform: scale(0.96);
+    }
+
     .option-card.selected {
       background-color: var(--primary-light);
       border-color: var(--primary);
-      box-shadow: 0 0 0 1px var(--primary);
+      box-shadow: 0 0 0 1px var(--primary), 0 4px 12px -2px rgba(37, 99, 235, 0.12);
+    }
+
+    .option-left-content {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 0;
     }
 
     .option-icon {
@@ -411,7 +443,7 @@
 
     /* Checkbox Indicator for Option Cards */
     .option-indicator {
-      margin-left: auto;
+      flex-shrink: 0;
       width: 18px;
       height: 18px;
       border: 2px solid var(--border);
@@ -419,12 +451,73 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all var(--transition-fast);
+      transition: border-color 0.25s ease, background-color 0.25s ease;
     }
 
     .option-card.selected .option-indicator {
       border-color: var(--primary);
       background-color: var(--primary);
+    }
+
+    /* Language Dropdown Selector Styles */
+    .lang-dropdown-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    
+    .lang-select {
+      width: 100%;
+      height: 48px;
+      background-color: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-btn);
+      padding: 0.75rem 2rem 0.75rem 1rem;
+      font-size: 0.937rem;
+      font-weight: 500;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+      outline: none;
+    }
+
+    .lang-select option {
+      font-family: var(--font-sans);
+      background-color: #FFFFFF;
+      color: var(--text-main);
+    }
+    
+    .lang-select:hover {
+      border-color: var(--border-focus);
+      background-color: var(--bg-primary);
+    }
+    
+    .lang-dropdown-wrapper.selected .lang-select {
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+      box-shadow: 0 0 0 1px var(--primary), 0 4px 12px -2px rgba(37, 99, 235, 0.12);
+    }
+
+    .lang-dropdown-arrow {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      transition: color 0.2s ease;
+    }
+    
+    .lang-dropdown-wrapper.selected .lang-dropdown-arrow {
+      color: var(--primary);
     }
 
     .option-indicator::after {
@@ -434,7 +527,7 @@
       background-color: white;
       border-radius: 50%;
       transform: scale(0);
-      transition: transform var(--transition-fast);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .option-card.selected .option-indicator::after {
@@ -879,18 +972,58 @@
       text-align: center;
     }
 
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid var(--primary-light);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+    /* Shimmer Skeleton Loading */
+    .skeleton-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
       margin-bottom: 1.5rem;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .skeleton-block {
+      background: linear-gradient(
+        90deg,
+        #e8edf5 0%,
+        #e8edf5 30%,
+        #f8faff 48%,
+        #ffffff 50%,
+        #f8faff 52%,
+        #e8edf5 70%,
+        #e8edf5 100%
+      );
+      background-size: 200% 100%;
+      border-radius: 8px;
+      animation: shimmer 1.4s linear infinite;
+    }
+
+    .skeleton-title {
+      height: 16px;
+      width: 55%;
+    }
+
+    .skeleton-line {
+      height: 12px;
+      width: 100%;
+    }
+
+    .skeleton-line.short {
+      width: 75%;
+    }
+
+    .skeleton-line.xshort {
+      width: 45%;
+    }
+
+    .skeleton-textarea {
+      height: 140px;
+      width: 100%;
+      border-radius: 12px;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
     .loading-text {
@@ -957,10 +1090,16 @@
     .draft-metrics-row {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 1.25rem;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
       padding: 0.5rem 0;
       border-bottom: 1px dashed var(--border);
+      flex-wrap: nowrap;
+    }
+    .metrics-sep {
+      color: var(--border);
+      font-size: 0.75rem;
+      flex-shrink: 0;
     }
     .metric-item {
       display: flex;
@@ -994,21 +1133,33 @@
       transition: width var(--transition-normal) ease, background-color var(--transition-normal) ease;
     }
     .strength-text {
-      min-width: 75px;
+      min-width: 55px;
       text-align: right;
     }
     @media (max-width: 640px) {
       .draft-metrics-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 0.375rem 0;
+        margin-bottom: 1rem;
+      }
+      .metric-item {
+        font-size: 0.75rem;
+        white-space: nowrap;
       }
       .progress-metric {
-        width: 100%;
-        justify-content: space-between;
+        width: auto;
+        flex-grow: 1;
+        justify-content: flex-end;
       }
       .metrics-progress-bar {
-        width: 50%;
+        width: 60px;
+      }
+      .strength-text {
+        min-width: unset;
+        font-size: 0.75rem;
       }
     }
 
@@ -1054,6 +1205,16 @@
     
     .confirm-wrap.highlight-warning {
       animation: border-pulse 0.8s ease-in-out 2;
+    }
+
+    @keyframes input-pulse {
+      0% { border-color: var(--border); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+      50% { border-color: #DC2626; box-shadow: 0 0 0 6px rgba(220, 38, 38, 0.15); }
+      100% { border-color: var(--border); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+    }
+    
+    .textarea-custom.highlight-warning {
+      animation: input-pulse 0.8s ease-in-out 2;
     }
 
     .checkbox-custom {
@@ -1108,7 +1269,31 @@
     /* Action Buttons in Draft card */
     .draft-actions {
       display: flex;
-      gap: 1rem;
+      flex-direction: column;
+      gap: 0.625rem;
+      margin-top: 1.25rem;
+    }
+
+    .draft-secondary-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.625rem;
+    }
+
+    .draft-secondary-actions .btn-secondary {
+      padding: 0.625rem 0.5rem;
+      font-size: 0.812rem;
+      justify-content: center;
+      gap: 0.375rem;
+    }
+
+    .draft-secondary-actions .btn-secondary svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-full {
+      width: 100%;
     }
 
     .btn-disabled {
@@ -1184,6 +1369,231 @@
       margin-bottom: 2rem;
     }
 
+    /* Success screen paste tutorial guide styles */
+    .paste-guide-card {
+      margin: 1.5rem auto 2rem auto;
+      max-width: 420px;
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background-color: var(--bg-primary);
+      padding: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      text-align: left;
+    }
+
+    .mock-browser {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background-color: #FFFFFF;
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    }
+
+    .mock-browser-header {
+      background-color: #F8FAFC;
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .mock-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .mock-dot.red { background-color: #EF4444; }
+    .mock-dot.yellow { background-color: #F59E0B; }
+    .mock-dot.green { background-color: #10B981; }
+
+    .mock-browser-title {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-left: auto;
+      margin-right: auto;
+      font-family: var(--font-sans);
+    }
+
+    .mock-google-box {
+      padding: 1rem;
+      position: relative;
+    }
+
+    .mock-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .mock-google-logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #3B82F6;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .mock-rating-stars {
+      color: #F59E0B;
+      font-size: 0.875rem;
+      letter-spacing: 1px;
+    }
+
+    .mock-textarea-field {
+      border: 1px solid #D1D5DB;
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 0.812rem;
+      min-height: 84px;
+      position: relative;
+      background-color: #FFFFFF;
+      line-height: 1.4;
+      font-family: var(--font-sans);
+    }
+    
+    .mock-star {
+      color: #E5E7EB; /* Grey by default */
+      font-size: 1rem;
+      transition: color 0.2s ease;
+      display: inline-block;
+    }
+    
+    /* Stars light up in sequence */
+    .mock-star.s1 { animation: star-light-1 4.5s infinite; }
+    .mock-star.s2 { animation: star-light-2 4.5s infinite; }
+    .mock-star.s3 { animation: star-light-3 4.5s infinite; }
+    .mock-star.s4 { animation: star-light-4 4.5s infinite; }
+    .mock-star.s5 { animation: star-light-5 4.5s infinite; }
+
+    @keyframes star-light-1 { 0%, 10% { color: #E5E7EB; } 11%, 100% { color: #F59E0B; } }
+    @keyframes star-light-2 { 0%, 14% { color: #E5E7EB; } 15%, 100% { color: #F59E0B; } }
+    @keyframes star-light-3 { 0%, 18% { color: #E5E7EB; } 19%, 100% { color: #F59E0B; } }
+    @keyframes star-light-4 { 0%, 22% { color: #E5E7EB; } 23%, 100% { color: #F59E0B; } }
+    @keyframes star-light-5 { 0%, 26% { color: #E5E7EB; } 27%, 100% { color: #F59E0B; } }
+
+    .mock-placeholder {
+      color: #9CA3AF;
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      pointer-events: none;
+      animation: placeholder-fade 4.5s infinite;
+    }
+
+    .mock-text-pasted {
+      color: var(--text-main);
+      display: block;
+      opacity: 0;
+      animation: text-paste-show 4.5s infinite;
+      word-break: break-word;
+    }
+
+    .mock-typing-cursor {
+      color: #2563EB;
+      font-weight: 700;
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      opacity: 0;
+      animation: cursor-animate 4.5s infinite;
+    }
+
+    .mock-pointer-hand {
+      position: absolute;
+      top: 6rem;
+      left: 80%;
+      z-index: 10;
+      pointer-events: none;
+      transform: scale(0.9);
+      animation: hand-move 4.5s infinite;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+    }
+
+    .mock-paste-tooltip {
+      position: absolute;
+      top: 1.75rem;
+      left: 55%;
+      transform: translateX(-50%) scale(0.8);
+      background-color: #1E293B;
+      color: #FFFFFF;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.375rem 0.75rem;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+      z-index: 9;
+      opacity: 0;
+      pointer-events: none;
+      animation: tooltip-fade 4.5s infinite;
+    }
+
+    .mock-paste-tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: #1E293B transparent transparent transparent;
+    }
+
+    .paste-instruction-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-top: 0.875rem;
+      font-size: 0.812rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .paste-instruction-banner svg {
+      color: var(--primary);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Keyframe Animations for Paste Tutorial Loop (4.5s duration) */
+    @keyframes placeholder-fade {
+      0%, 61% { opacity: 1; }
+      62%, 100% { opacity: 0; }
+    }
+
+    @keyframes text-paste-show {
+      0%, 61% { opacity: 0; }
+      62%, 88% { opacity: 1; }
+      89%, 100% { opacity: 0; }
+    }
+
+    @keyframes cursor-animate {
+      0%, 33% { opacity: 0; }
+      34%, 61% { opacity: 1; left: 0.75rem; }
+      62% { opacity: 1; left: auto; right: 0.75rem; }
+      63%, 88% { opacity: 0; }
+      89%, 100% { opacity: 0; }
+    }
+
+    @keyframes hand-move {
+      0% { top: 6rem; left: 80%; opacity: 0; transform: scale(0.9); }
+      33% { top: 6rem; left: 80%; opacity: 0; transform: scale(0.9); } /* Wait for stars */
+      44% { top: 4.5rem; left: 60%; opacity: 1; transform: scale(0.9); }
+      46% { top: 3.5rem; left: 55%; opacity: 1; transform: scale(0.78); } /* Click/Press down */
+      48%, 56% { top: 3.5rem; left: 55%; opacity: 1; transform: scale(0.9); } /* Wait */
+      58% { top: 2.25rem; left: 57%; opacity: 1; transform: scale(0.9); } /* Hover to Tooltip */
+      60% { top: 2.25rem; left: 57%; opacity: 1; transform: scale(0.78); } /* Tap Tooltip */
+      65%, 88% { top: 5rem; left: 65%; opacity: 0; transform: scale(0.9); }
+      89%, 100% { opacity: 0; }
+    }
+
+    @keyframes tooltip-fade {
+      0%, 46% { opacity: 0; transform: translateX(-50%) scale(0.8); }
+      47%, 60% { opacity: 1; transform: translateX(-50%) scale(1); }
+      61%, 100% { opacity: 0; transform: translateX(-50%) scale(0.8); }
+    }
+
     /* Admin Setup Preview */
     .admin-preview-card {
       max-width: 760px;
@@ -1253,13 +1663,70 @@
       }
       
       .features-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        margin-top: 2rem;
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        padding: 0.25rem 1rem 0.75rem;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+      }
+      .features-grid::-webkit-scrollbar {
+        display: none;
+      }
+      .feature-card {
+        flex: 0 0 60%;
+        scroll-snap-align: center;
+        padding: 0.75rem;
+      }
+      .feature-card .feature-header {
+        gap: 0.5rem;
+        margin-bottom: 0.375rem;
+      }
+      .feature-card .feature-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+      }
+      .feature-card .feature-icon svg {
+        width: 12px;
+        height: 12px;
+      }
+      .feature-card .feature-title {
+        font-size: 0.812rem;
+      }
+      .feature-card .feature-desc {
+        font-size: 0.75rem;
+        line-height: 1.3;
       }
       
       .options-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.625rem;
+      }
+      .options-grid .option-card {
+        padding: 0.5rem 0.75rem;
+        min-height: 44px;
+      }
+      .options-grid .option-label {
+        font-size: 0.812rem;
+      }
+      .options-grid .option-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 0.875rem;
+      }
+      .options-grid .lang-select {
+        height: 44px;
+        padding: 0.5rem 2rem 0.5rem 0.75rem;
+        font-size: 0.812rem;
+      }
+      .options-grid .lang-dropdown-arrow {
+        right: 0.75rem;
       }
       
       .experience-grid {
@@ -1270,14 +1737,7 @@
         padding: 1.5rem;
       }
 
-      .draft-actions {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      
-      .draft-actions .btn-right {
-        margin-left: 0;
-      }
+
 
       .btn-primary, .btn-secondary, .btn-success {
         width: 100%;
@@ -1395,7 +1855,6 @@
         <span class="brand-name">𝐁𝐮𝐳𝐥 𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬</span>
         <span class="badge">Google Review Assistant</span>
       </div>
-      <button class="btn-login" type="button" aria-label="Business Login">Business Login</button>
     </div>
   </header>
 
@@ -1417,32 +1876,38 @@
       <!-- Feature Cards -->
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+          <div class="feature-header">
+            <div class="feature-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="feature-title">Takes less than 1 minute</h3>
           </div>
-          <h3 class="feature-title">Takes less than 1 minute</h3>
           <p class="feature-desc">Quick, guided questions structure your thoughts efficiently.</p>
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
+          <div class="feature-header">
+            <div class="feature-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </div>
+            <h3 class="feature-title">Editable before posting</h3>
           </div>
-          <h3 class="feature-title">Editable before posting</h3>
           <p class="feature-desc">You are in full control. Change any word before sharing it.</p>
         </div>
 
         <div class="feature-card">
-          <div class="feature-icon">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
+          <div class="feature-header">
+            <div class="feature-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h3 class="feature-title">Based on your real experience</h3>
           </div>
-          <h3 class="feature-title">Based on your real experience</h3>
           <p class="feature-desc">Ensures honest, authentic drafts that reflect your actual details.</p>
         </div>
       </div>
@@ -1655,50 +2120,83 @@
             <label class="form-label">Choose review style</label>
             <div class="options-grid">
               <div class="option-card selected" onclick="selectStyle(this, 'Simple')">
-                <div class="option-icon">✏️</div>
-                <span class="option-label">Simple</span>
-                <div class="info-tooltip" data-tooltip="Short, direct, and straight to the point.">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                  </svg>
+                <div class="option-left-content">
+                  <div class="option-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </div>
+                  <span class="option-label">Simple</span>
+                  <div class="info-tooltip" data-tooltip="Short, direct, and straight to the point.">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="option-indicator"></div>
               </div>
               <div class="option-card" onclick="selectStyle(this, 'Friendly')">
-                <div class="option-icon">👋</div>
-                <span class="option-label">Friendly</span>
-                <div class="info-tooltip" data-tooltip="Warm, casual, and enthusiastic tone.">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                  </svg>
+                <div class="option-left-content">
+                  <div class="option-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                      <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                      <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                    </svg>
+                  </div>
+                  <span class="option-label">Friendly</span>
+                  <div class="info-tooltip" data-tooltip="Warm, casual, and enthusiastic tone.">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="option-indicator"></div>
               </div>
               <div class="option-card" onclick="selectStyle(this, 'Detailed')">
-                <div class="option-icon">📄</div>
-                <span class="option-label">Detailed</span>
-                <div class="info-tooltip" data-tooltip="Thorough, structured, and comprehensive feedback.">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                  </svg>
+                <div class="option-left-content">
+                  <div class="option-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                      <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                  </div>
+                  <span class="option-label">Detailed</span>
+                  <div class="info-tooltip" data-tooltip="Thorough, structured, and comprehensive feedback.">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="option-indicator"></div>
               </div>
               <div class="option-card" onclick="selectStyle(this, 'Professional')">
-                <div class="option-icon">💼</div>
-                <span class="option-label">Professional</span>
-                <div class="info-tooltip" data-tooltip="Polite, formal, and business-focused tone.">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                  </svg>
+                <div class="option-left-content">
+                  <div class="option-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                  </div>
+                  <span class="option-label">Professional</span>
+                  <div class="info-tooltip" data-tooltip="Polite, formal, and business-focused tone.">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="option-indicator"></div>
               </div>
@@ -1708,20 +2206,33 @@
           <div class="form-group">
             <label class="form-label">Choose language</label>
             <div class="options-grid">
-              <div class="option-card selected" onclick="selectLanguage(this, 'English')">
-                <div class="option-icon">🇬🇧</div>
-                <span class="option-label">English</span>
+              <!-- Column 1: Default English Card -->
+              <div class="option-card selected" id="lang-card-english" onclick="selectLanguageCard(this, 'English')">
+                <div class="option-left-content">
+                  <span class="option-label">English</span>
+                </div>
                 <div class="option-indicator"></div>
               </div>
-              <div class="option-card" onclick="selectLanguage(this, 'Tamil-English Mix')">
-                <div class="option-icon">🔤</div>
-                <span class="option-label">Tamil-English Mix</span>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectLanguage(this, 'Tamil')">
-                <div class="option-icon">தமிழ்</div>
-                <span class="option-label">Tamil</span>
-                <div class="option-indicator"></div>
+              
+              <!-- Column 2: Dropdown for Other Languages -->
+              <div class="lang-dropdown-wrapper">
+                <select class="lang-select" id="lang-select-other" onchange="selectLanguageDropdown(this)">
+                  <option value="" disabled selected hidden>Other Languages...</option>
+                  <option value="Tamil-English Mix">Tamil-English Mix</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Telugu">Telugu</option>
+                  <option value="Kannada">Kannada</option>
+                  <option value="Malayalam">Malayalam</option>
+                  <option value="Bengali">Bengali</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Gujarati">Gujarati</option>
+                </select>
+                <div class="lang-dropdown-arrow">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
@@ -1777,7 +2288,13 @@
 
       <!-- Loading State screen -->
       <div class="loading-wrapper" id="loading-screen">
-        <div class="spinner"></div>
+        <div class="skeleton-wrapper">
+          <div class="skeleton-block skeleton-title"></div>
+          <div class="skeleton-block skeleton-textarea"></div>
+          <div class="skeleton-block skeleton-line"></div>
+          <div class="skeleton-block skeleton-line short"></div>
+          <div class="skeleton-block skeleton-line xshort"></div>
+        </div>
         <p class="loading-text">Creating your draft review...</p>
         <p class="feature-desc">Building review based on your experience</p>
       </div>
@@ -1810,15 +2327,16 @@
         <!-- Review Quality / Length Metrics -->
         <div class="draft-metrics-row">
           <div class="metric-item">
-            <span class="metric-label">Word Count:</span>
+            <span class="metric-label">Words</span>
             <span class="metric-value" id="metrics-word-count">0</span>
           </div>
+          <span class="metrics-sep">·</span>
           <div class="metric-item">
-            <span class="metric-label">Reading Time:</span>
+            <span class="metric-label">Read</span>
             <span class="metric-value" id="metrics-reading-time">~0s</span>
           </div>
+          <span class="metrics-sep">·</span>
           <div class="metric-item progress-metric">
-            <span class="metric-label">Review Strength:</span>
             <div class="metrics-progress-bar">
               <div class="metrics-progress-fill" id="metrics-strength-fill" style="width: 0%"></div>
             </div>
@@ -1826,16 +2344,11 @@
           </div>
         </div>
 
-        <!-- Compliance Text Box -->
-        <div class="compliance-box">
-          <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-          </svg>
-          <span>Please make sure the review reflects your real personal experience. You can edit the draft before posting.</span>
-        </div>
+
+
 
         <!-- Checkbox confirmation -->
-        <label class="confirm-wrap" id="confirm-wrap" for="checkbox-confirm" onclick="toggleConfirm(event)">
+        <label class="confirm-wrap" id="confirm-wrap" for="checkbox-confirm">
           <input type="checkbox" id="checkbox-confirm" class="checkbox-custom">
           <div>
             <div class="confirm-text">This review reflects my real personal experience.</div>
@@ -1845,31 +2358,37 @@
 
         <!-- Action Buttons -->
         <div class="draft-actions">
-          <button class="btn-secondary" id="btn-regenerate" type="button" onclick="regenerateDraft()">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18.5" />
-            </svg>
-            <span>Regenerate</span>
-          </button>
-          
-          <button class="btn-secondary btn-disabled" id="btn-copy" type="button" onclick="copyReviewOnly()">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-            </svg>
-            <span>Copy Review</span>
-          </button>
-
-          <button class="btn-primary btn-success btn-disabled btn-right" id="btn-copy-open" type="button" onclick="copyAndOpenGoogle()">
+          <button class="btn-primary btn-success btn-disabled btn-full" id="btn-copy-open" type="button" onclick="copyAndOpenGoogle()">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
             <span>Copy & Open Google Review</span>
           </button>
-        </div>
 
-        <button class="btn-secondary" style="margin-top: 1.5rem; width: 100%; justify-content: center;" onclick="modifyAnswers()">
-          Modify Answers
-        </button>
+          <div class="draft-secondary-actions">
+            <button class="btn-secondary" id="btn-regenerate" type="button" onclick="regenerateDraft()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                <path d="m5 3 1 2.5L8.5 6 6 7 5 9.5 4 7 1.5 6 4 5.5z"/>
+              </svg>
+              <span>Regen</span>
+            </button>
+            
+            <button class="btn-secondary btn-disabled" id="btn-copy" type="button" onclick="copyReviewOnly()">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <span>Copy</span>
+            </button>
+
+            <button class="btn-secondary" id="btn-modify" type="button" onclick="modifyAnswers()">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+              <span>Edit</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Success / Thank-you message Section -->
@@ -1882,8 +2401,55 @@
         <h2>Review Copied Successfully</h2>
         <p class="success-subtitle">Please paste it into Google, edit if needed, and post from your own account.</p>
         
+        <!-- Interactive Paste Guide Animation -->
+        <div class="paste-guide-card">
+          <div class="mock-browser">
+            <div class="mock-browser-header">
+              <div class="mock-dot red"></div>
+              <div class="mock-dot yellow"></div>
+              <div class="mock-dot green"></div>
+              <div class="mock-browser-title">google.com/maps</div>
+            </div>
+            
+            <div class="mock-google-box">
+              <div class="mock-header-row">
+                <div class="mock-google-logo">G</div>
+                <div class="mock-rating-stars">
+                  <span class="mock-star s1">★</span>
+                  <span class="mock-star s2">★</span>
+                  <span class="mock-star s3">★</span>
+                  <span class="mock-star s4">★</span>
+                  <span class="mock-star s5">★</span>
+                </div>
+              </div>
+              <div class="mock-textarea-field">
+                <span class="mock-placeholder">Share details of your own experience...</span>
+                <span class="mock-text-pasted">The ambience at Santhiya Chandran IAS Academy is excellent. It creates a focused environment...</span>
+                <span class="mock-typing-cursor">|</span>
+              </div>
+              
+              <!-- Pointer Hand Icon -->
+              <div class="mock-pointer-hand">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5">
+                  <path d="M12 2v10m0 0l-3-3m3 3l3-3M5 15h14v5H5z"/>
+                </svg>
+              </div>
+
+              <!-- Paste Tooltip -->
+              <div class="mock-paste-tooltip">Paste</div>
+            </div>
+          </div>
+          
+          <div class="paste-instruction-banner">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 00-2 2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <span><strong>Tip:</strong> Tap & Hold or Right-Click in the box, then select <strong>"Paste"</strong>.</span>
+          </div>
+        </div>
+        
         <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 320px; margin: 0 auto 2rem auto;">
-          <button class="btn-primary" onclick="openGoogleTab()">
+          <button class="btn-primary" id="success-open-btn" onclick="openGoogleTab()">
             <span>Open Google Review Page Again</span>
           </button>
           <button class="btn-secondary" onclick="restartAssistant()">
@@ -1896,37 +2462,7 @@
 
     </section>
 
-    <!-- Optional Admin Setup Preview Card -->
-    <section class="admin-preview-card">
-      <div class="admin-title-wrap">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-        <span style="font-weight: 600; font-size: 0.875rem;">Business Setup Preview</span>
-      </div>
-      <div class="admin-grid">
-        <div class="admin-field">
-          <div class="admin-label">Business Name</div>
-          <div class="admin-value">𝐁𝐮𝐳𝐥 𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬</div>
-        </div>
-        <div class="admin-field">
-          <div class="admin-label">Place ID</div>
-          <div class="admin-value">ChIJK6_papbChmgRCAqryUDNfYU</div>
-        </div>
-        <div class="admin-field" style="grid-column: span 2;">
-          <div class="admin-label">Review Link</div>
-          <div class="admin-value">https://search.google.com/local/writereview?placeid=ChIJK6_papbChmgRCAqryUDNfYU</div>
-        </div>
-        <div class="admin-field">
-          <div class="admin-label">Status</div>
-          <div class="status-badge">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--success); display: inline-block;"></span>
-            <span>Active</span>
-          </div>
-        </div>
-      </div>
-    </section>
+
 
   </main>
 
@@ -1964,44 +2500,198 @@
       apiVariants: [] // Stores generated review text variants
     };
 
+    function saveSessionState() {
+      try {
+        const data = {
+          locationId: state.locationId,
+          currentStep: state.currentStep,
+          isDynamic: state.isDynamic,
+          questions: state.questions,
+          answers: state.answers,
+          service: state.service,
+          experience: state.experience,
+          likes: state.likes,
+          detail: state.detail,
+          style: state.style,
+          language: state.language,
+          apiVariants: state.apiVariants,
+          googleReviewLink: GOOGLE_REVIEW_LINK,
+          timestamp: Date.now()
+        };
+        localStorage.setItem('buzl_review_state', JSON.stringify(data));
+      } catch (e) {
+        console.warn('Failed to save session state:', e);
+      }
+    }
+
+    function clearSessionState() {
+      try {
+        localStorage.removeItem('buzl_review_state');
+      } catch (e) {
+        console.warn('Failed to clear session state:', e);
+      }
+    }
+
+    function restoreSessionState() {
+      try {
+        const savedData = localStorage.getItem('buzl_review_state');
+        if (!savedData) return false;
+
+        const data = JSON.parse(savedData);
+        
+        // TTL Check: 1 hour expiration (3,600,000ms)
+        if (!data.timestamp || (Date.now() - data.timestamp > 3600000)) {
+          clearSessionState();
+          return false;
+        }
+
+        state.currentStep = data.currentStep || 1;
+        state.locationId = data.locationId || '';
+        state.isDynamic = !!data.isDynamic;
+        state.questions = data.questions || [];
+        state.answers = data.answers || {};
+        state.service = data.service || '';
+        state.experience = data.experience || '';
+        state.likes = data.likes || [];
+        state.detail = data.detail || '';
+        state.style = data.style || 'Simple';
+        state.language = data.language || 'English';
+        state.apiVariants = data.apiVariants || [];
+        if (data.googleReviewLink) {
+          GOOGLE_REVIEW_LINK = data.googleReviewLink;
+        }
+
+        return true;
+      } catch (e) {
+        console.warn('Failed to restore session state:', e);
+        clearSessionState();
+        return false;
+      }
+    }
+
+    function applyRestoredStateToDOM() {
+      // 0. Update Brand UI based on restored configuration
+      if (state.isDynamic && state.questions && state.questions[0] && state.questions[0].responseGuidance) {
+        updateBrandUI(state.questions[0].responseGuidance.location);
+      } else {
+        updateBrandUI('𝐁𝐮𝐳𝐥 𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬');
+      }
+
+      // 1. If we have generated drafts, go straight to the draft section
+      if (state.apiVariants && state.apiVariants.length > 0) {
+        document.getElementById('assistant-form').style.display = 'none';
+        document.getElementById('progress-wrapper').style.display = 'none';
+        if (document.getElementById('loading-screen')) {
+          document.getElementById('loading-screen').style.display = 'none';
+        }
+        
+        renderVariantsTabs(state.apiVariants);
+        const initialText = state.apiVariants[0].text;
+        document.getElementById('draft-textarea').value = initialText;
+        
+        const exp = inferExperienceLevel();
+        updateStarPreview('draft-star-preview', 'draft-star-text', exp);
+        updateDraftMetrics(initialText);
+        
+        document.getElementById('draft-section').style.display = 'block';
+        
+        // Add a subtle restoration notification toast
+        showToast('Restored draft from your last session.');
+        return;
+      }
+
+      // 2. Pre-fill questions/chips
+      const detailEl = document.getElementById('detail-text');
+      if (detailEl && state.detail) {
+        detailEl.value = state.detail;
+        // Trigger validation style checking
+        detailEl.dispatchEvent(new Event('input'));
+      }
+
+      // Restore style selection
+      const styleSimple = document.querySelector('[onclick="selectStyle(this, \'Simple\')"]');
+      if (styleSimple) styleSimple.classList.remove('selected');
+      const selectedStyleCard = document.querySelector(`[onclick*="selectStyle"][onclick*="'${state.style}'"]`);
+      if (selectedStyleCard) {
+        selectedStyleCard.parentElement.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+        selectedStyleCard.classList.add('selected');
+      }
+
+      // Restore language selection
+      const langEnglishCard = document.getElementById('lang-card-english');
+      const langSelect = document.getElementById('lang-select-other');
+      const dropdownWrap = document.querySelector('.lang-dropdown-wrapper');
+      
+      if (langEnglishCard && langSelect) {
+        langEnglishCard.classList.remove('selected');
+        langSelect.value = "";
+        if (dropdownWrap) dropdownWrap.classList.remove('selected');
+
+        if (state.language === 'English') {
+          langEnglishCard.classList.add('selected');
+        } else {
+          langSelect.value = state.language;
+          if (dropdownWrap) dropdownWrap.classList.add('selected');
+        }
+      }
+
+      // Restore Step 1 option selections
+      if (state.isDynamic) {
+        renderDynamicQuestions(state.questions);
+        const likesGroup = document.getElementById('static-likes-group');
+        if (likesGroup) likesGroup.style.display = 'none';
+
+        Object.entries(state.answers).forEach(([qid, response]) => {
+          const card = document.querySelector(`[onclick*="selectDynamicResponse"][onclick*="'${qid}'"][onclick*="'${response}'"]`);
+          if (card) card.classList.add('selected');
+        });
+      } else {
+        const likesGroup = document.getElementById('static-likes-group');
+        if (likesGroup) likesGroup.style.display = 'block';
+
+        if (state.service) {
+          const sCard = document.querySelector(`[onclick*="selectService"][onclick*="'${state.service}'"]`);
+          if (sCard) sCard.classList.add('selected');
+        }
+        if (state.experience) {
+          const eCard = document.querySelector(`[onclick*="selectExperience"][onclick*="'${state.experience}'"]`);
+          if (eCard) eCard.classList.add('selected');
+        }
+        if (state.likes && state.likes.length > 0) {
+          state.likes.forEach(like => {
+            const chip = document.querySelector(`[onclick*="toggleLike"][onclick*="'${like}'"]`);
+            if (chip) chip.classList.add('selected');
+          });
+        }
+      }
+
+      // Go to the correct step
+      transitionStep(1, state.currentStep);
+    }
+
+    const BASIC_AUTH_HEADER = 'Basic MkJ1emxtcXBISmVWQm93MGR6UjlnUDMkdVFMeElBOmRnQVklbkgxTU5QZ092R2FZUmc2eW5vbU0zbWJKZ0dqciVaM0ZjUENKTnp2bSNLalYhSSVZOXRmJGJEYWNCZ1BJQUJ1emw=';
+
+    const PLACE_ID_MAP = {
+      'locn-dev-397': 'ChIJbfT9ntf1qjsRCjeaPBrgenM', // Santhiya Chandran IAS Academy
+      'locn-dev-269': 'ChIJbfT9ntf1qjsRCjeaPBrgenM'  // Santhiya Chandran IAS Academy
+    };
+
     // Configuration for APIs
     const API_CONFIG = {
       baseUrl: window.location.hostname.includes('gobuzl.com') ? '/api' : 'https://dev.web.gobuzl.com/api',
-      isLocalMock: false, // Set dynamically based on host
+      reviewsUrl: window.location.hostname.includes('gobuzl.com') ? '/ai-api' : 'https://dev.web.gobuzl.com/ai-api',
       getQuestionsUrl: (locId) => {
-        if (API_CONFIG.isLocalMock) {
-          let pathname = window.location.pathname;
-          if (pathname.endsWith('/')) {
-            pathname = pathname.slice(0, -1);
-          }
-          const base = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-          return `${window.location.origin}${base}API%20sample%20json/reviewquestions-locn-dev-269.json`;
-        }
         return `${API_CONFIG.baseUrl}/locations/${locId}/reviewquestions`;
       },
       getGenerationUrl: (locId) => {
-        if (API_CONFIG.isLocalMock) {
-          let pathname = window.location.pathname;
-          if (pathname.endsWith('/')) {
-            pathname = pathname.slice(0, -1);
-          }
-          const base = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-          return `${window.location.origin}${base}API%20sample%20json/reviewsgeneration.txt`;
-        }
-        return `${API_CONFIG.baseUrl}/locations/${locId}/reviewsgeneration`;
+        return `${API_CONFIG.reviewsUrl}/reviews/generate`;
       },
-      getAuthHeader: (locId) => {
-        // Basic Auth with locationId as username and empty password
-        return 'Basic ' + btoa(locId + ':');
+      getCustomerReviewsUrl: (locId) => {
+        return `${API_CONFIG.baseUrl}/locations/${locId}/customerreviews`;
       }
     };
 
-    // Detect if running locally or if ?mock=true is in URL
     const urlParams = new URLSearchParams(window.location.search);
-    const host = window.location.hostname;
-    if (host === 'localhost' || host === '127.0.0.1' || urlParams.get('mock') === 'true') {
-      API_CONFIG.isLocalMock = true;
-    }
 
     let GOOGLE_REVIEW_LINK = 'https://search.google.com/local/writereview?placeid=ChIJK6_papbChmgRCAqryUDNfYU';
 
@@ -2068,9 +2758,13 @@
       
       if (dynamicContainer) {
         dynamicContainer.innerHTML = `
-          <div style="padding: 2.5rem 1rem; text-align: center; color: var(--text-muted);">
-            <div class="voice-pulse-circle" style="animation: pulse 1.5s infinite; margin: 0 auto 1rem; background: var(--primary); width: 24px; height: 24px; border-radius: 50%;"></div>
-            <p style="font-weight: 600; color: var(--text-main);">Fetching review questions...</p>
+          <div class="skeleton-wrapper" style="margin-bottom: 0;">
+            <div class="skeleton-block skeleton-title" style="height:14px; width:60%;"></div>
+            <div class="skeleton-block" style="height:52px; border-radius:12px;"></div>
+            <div class="skeleton-block skeleton-title" style="height:14px; width:65%; margin-top:0.5rem;"></div>
+            <div class="skeleton-block" style="height:52px; border-radius:12px;"></div>
+            <div class="skeleton-block skeleton-title" style="height:14px; width:50%; margin-top:0.5rem;"></div>
+            <div class="skeleton-block" style="height:52px; border-radius:12px;"></div>
           </div>
         `;
         dynamicContainer.style.display = 'block';
@@ -2080,9 +2774,8 @@
       try {
         const url = API_CONFIG.getQuestionsUrl(locId);
         const headers = new Headers();
-        if (!API_CONFIG.isLocalMock) {
-          headers.append("Authorization", API_CONFIG.getAuthHeader(locId));
-        }
+        headers.append("Authorization", BASIC_AUTH_HEADER);
+        headers.append("X-App-Ver", "1.0");
 
         const response = await fetch(url, { headers });
         if (!response.ok) {
@@ -2090,6 +2783,7 @@
         }
         
         const data = await response.json();
+        console.log("Questions Response payload:", data);
         
         if (data && data.resp && data.resp.questions && data.resp.questions.length > 0) {
           state.questions = data.resp.questions;
@@ -2100,13 +2794,12 @@
             updateBrandUI(state.questions[0].responseGuidance.location);
           }
           
-          // Dynamically update redirect links if Place ID returned
-          if (data.resp.placeId) {
-            GOOGLE_REVIEW_LINK = `https://search.google.com/local/writereview?placeid=${data.resp.placeId}`;
-          } else if (data.resp.googlePlaceId) {
-            GOOGLE_REVIEW_LINK = `https://search.google.com/local/writereview?placeid=${data.resp.googlePlaceId}`;
-          } else if (data.resp.reviewUrl) {
+          // Dynamically update redirect links if Place ID returned, falling back to local PLACE_ID_MAP
+          const resolvedPlaceId = data.resp.placeId || data.resp.googlePlaceId || PLACE_ID_MAP[locId] || 'ChIJK6_papbChmgRCAqryUDNfYU';
+          if (data.resp.reviewUrl && !data.resp.placeId && !data.resp.googlePlaceId && !PLACE_ID_MAP[locId]) {
             GOOGLE_REVIEW_LINK = data.resp.reviewUrl;
+          } else {
+            GOOGLE_REVIEW_LINK = `https://search.google.com/local/writereview?placeid=${resolvedPlaceId}`;
           }
           
           const likesGroup = document.getElementById('static-likes-group');
@@ -2153,51 +2846,20 @@
         const grid = document.createElement('div');
         grid.className = 'options-grid';
         
-        // Add specific class for experience grids if suggested responses is 4 options
-        if (q.suggestedResponses.length === 4) {
-          grid.className = 'experience-grid';
-        }
+        // Use consistent 2-column options-grid layout for dynamic questions
         
         q.suggestedResponses.forEach(resp => {
           const card = document.createElement('div');
           card.className = 'option-card';
           
           // Handle specific styling for experience ratings if applicable
-          if (q.suggestedResponses.length === 4) {
-            card.classList.add('exp-card');
-            if (resp.toLowerCase().includes('excellent') || resp.toLowerCase().includes('perfect') || resp.toLowerCase().includes('great')) {
-              card.classList.add('exp-excellent');
-            } else if (resp.toLowerCase().includes('good') || resp.toLowerCase().includes('knowledgeable')) {
-              card.classList.add('exp-good');
-            } else if (resp.toLowerCase().includes('average') || resp.toLowerCase().includes('satisfactory')) {
-              card.classList.add('exp-average');
-            } else {
-              card.classList.add('exp-needs-improvement');
-            }
-          }
+          // Dynamic questions should use consistent premium blue selected styling
           
           if (state.answers[q.qid] === resp) {
             card.classList.add('selected');
           }
           
-          // Render inner content (with nice default checkbox/checkmark icons or emojis)
-          let innerIcon = `
-            <div class="option-icon">
-              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          `;
-          if (q.suggestedResponses.length === 4) {
-            let emoji = '🙂';
-            if (resp.toLowerCase().includes('excellent') || resp.toLowerCase().includes('perfect') || resp.toLowerCase().includes('great')) emoji = '😊';
-            if (resp.toLowerCase().includes('average') || resp.toLowerCase().includes('satisfactory')) emoji = '😐';
-            if (resp.toLowerCase().includes('disappointing') || resp.toLowerCase().includes('poor') || resp.toLowerCase().includes('needs improvement')) emoji = '⚠️';
-            innerIcon = `<div class="exp-emoji">${emoji}</div>`;
-          }
-          
           card.innerHTML = `
-            ${innerIcon}
             <span class="option-label">${resp}</span>
             <div class="option-indicator"></div>
           `;
@@ -2222,13 +2884,14 @@
       
       state.answers[qid] = responseVal;
       clearWarning();
+      saveSessionState();
       
       // Auto-scroll to next group or next step button
       const currentGroup = element.closest('.form-group');
       const nextGroup = currentGroup.nextElementSibling;
       if (nextGroup && nextGroup.style.display !== 'none' && nextGroup.classList.contains('form-group')) {
         nextGroup.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
+      } else if (!state.questions || state.questions.length < 2) {
         const btnNext = document.getElementById('btn-next');
         if (btnNext) {
           btnNext.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -2268,7 +2931,7 @@
         if (index === 0) {
           tab.classList.add('active');
         }
-        tab.textContent = `Draft Variant ${index + 1}`;
+        tab.textContent = `Draft ${index + 1}`;
         
         const selectTabFn = () => {
           container.querySelectorAll('.variant-tab').forEach(t => t.classList.remove('active'));
@@ -2311,6 +2974,7 @@
       triggerPulse(element);
       state.service = serviceVal;
       clearWarning();
+      saveSessionState();
 
       // Auto-scroll to the overall experience rating section
       const expGroup = document.getElementById('experience-group');
@@ -2327,6 +2991,7 @@
       triggerPulse(element);
       state.experience = ratingVal;
       clearWarning();
+      saveSessionState();
 
       // Auto-scroll to the next step button
       const btnNext = document.getElementById('btn-next');
@@ -2346,6 +3011,7 @@
       } else {
         state.likes = state.likes.filter(item => item !== itemVal);
       }
+      saveSessionState();
     }
 
     // Step 2: Select Style
@@ -2356,16 +3022,50 @@
       triggerPulse(element);
       state.style = styleVal;
       clearWarning();
+      saveSessionState();
     }
 
-    // Step 2: Select Language
-    function selectLanguage(element, langVal) {
+    // Step 2: Select Language Card (English)
+    function selectLanguageCard(element, langVal) {
+      const dropdownWrap = document.querySelector('.lang-dropdown-wrapper');
+      if (dropdownWrap) {
+        dropdownWrap.classList.remove('selected');
+      }
+      
+      const selectElem = document.getElementById('lang-select-other');
+      if (selectElem) {
+        selectElem.value = "";
+      }
+      
       const siblingCards = element.parentElement.querySelectorAll('.option-card');
       siblingCards.forEach(card => card.classList.remove('selected'));
       element.classList.add('selected');
       triggerPulse(element);
+      
       state.language = langVal;
       clearWarning();
+      saveSessionState();
+    }
+
+    // Step 2: Select Language Dropdown (Other)
+    function selectLanguageDropdown(selectElem) {
+      const selectedValue = selectElem.value;
+      if (!selectedValue) return;
+
+      const englishCard = document.getElementById('lang-card-english');
+      if (englishCard) {
+        englishCard.classList.remove('selected');
+      }
+
+      const dropdownWrap = selectElem.closest('.lang-dropdown-wrapper');
+      if (dropdownWrap) {
+        dropdownWrap.classList.add('selected');
+        triggerPulse(dropdownWrap);
+      }
+
+      state.language = selectedValue;
+      clearWarning();
+      saveSessionState();
     }
 
     // Navigation and validation
@@ -2404,29 +3104,76 @@
     }
 
     function transitionStep(from, to) {
-      document.getElementById(`step-${from}`).classList.remove('active');
-      document.getElementById(`step-${to}`).classList.add('active');
+      const fromEl = document.getElementById(`step-${from}`);
+      const toEl   = document.getElementById(`step-${to}`);
+      const goingForward = to > from;
+
       state.currentStep = to;
-      
+      saveSessionState();
+
+      // Update progress bar & button text immediately
       const fillPercentage = to === 1 ? 50 : 100;
       document.getElementById('progress-bar-fill').style.width = `${fillPercentage}%`;
       document.getElementById('progress-text').textContent = stepTitles[to - 1];
 
       const btnBack = document.getElementById('btn-back');
-      if (to === 1) {
-        btnBack.style.visibility = 'hidden';
-      } else {
-        btnBack.style.visibility = 'visible';
-      }
+      btnBack.style.visibility = to === 1 ? 'hidden' : 'visible';
 
       const btnNext = document.getElementById('btn-next');
-      if (to === 2) {
-        btnNext.querySelector('span').textContent = 'Generate Review';
+      btnNext.querySelector('span').textContent = to === 2 ? 'Generate' : 'Next Step';
+
+      // Hide outgoing step — must set inline display:none to override any inline display:block
+      // set by a previous forward animation (classList alone can't win against inline styles)
+      fromEl.classList.remove('active');
+      fromEl.style.display = 'none';
+
+      if (goingForward) {
+        // 1. Show shimmer placeholder in place of incoming step
+        const shimmerHTML = `
+          <div id="step-shimmer-overlay" class="skeleton-wrapper" style="margin-bottom:0; padding: 0.5rem 0;">
+            <div class="skeleton-block" style="height:14px; width:55%; border-radius:6px;"></div>
+            <div class="skeleton-block" style="height:48px; border-radius:12px;"></div>
+            <div class="skeleton-block" style="height:14px; width:60%; border-radius:6px;"></div>
+            <div class="skeleton-block" style="height:48px; border-radius:12px;"></div>
+            <div class="skeleton-block" style="height:14px; width:50%; border-radius:6px;"></div>
+            <div class="skeleton-block" style="height:48px; border-radius:12px;"></div>
+          </div>`;
+
+        const shimmerEl = document.createElement('div');
+        shimmerEl.id = 'step-transition-shimmer';
+        shimmerEl.innerHTML = shimmerHTML;
+        shimmerEl.style.cssText = 'padding: 0;';
+        toEl.parentNode.insertBefore(shimmerEl, toEl);
+        shimmerEl.style.display = 'block';
+        shimmerEl.style.animation = 'slideInFromRight 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards';
+
+        // 2. After shimmer plays, remove it and slide in the real step
+        setTimeout(() => {
+          shimmerEl.remove();
+          toEl.style.display = 'block';
+          toEl.style.animation = 'none';
+          toEl.offsetHeight; // reflow
+          toEl.style.animation = 'slideInFromRight 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards';
+          setTimeout(() => {
+            toEl.style.animation = '';
+            toEl.style.display = '';  // clear inline, let CSS+active class control
+            toEl.classList.add('active');
+          }, 400);
+        }, 600);
+
       } else {
-        btnNext.querySelector('span').textContent = 'Next Step';
+        // Going back — no shimmer, just slide in from left
+        toEl.style.display = 'block';
+        toEl.style.animation = 'none';
+        toEl.offsetHeight;
+        toEl.style.animation = 'slideInFromLeft 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards';
+        setTimeout(() => {
+          toEl.style.animation = '';
+          toEl.style.display = '';  // clear inline, let CSS+active class control
+          toEl.classList.add('active');
+        }, 400);
       }
 
-      // Auto-scroll to top of form when transitioning
       scrollToForm();
     }
 
@@ -2683,41 +3430,74 @@
           const locId = state.locationId;
           const url = API_CONFIG.getGenerationUrl(locId);
           
+          const answeredQuestions = state.questions
+            .filter(q => state.answers[q.qid] !== undefined)
+            .map(q => ({
+              ...q,
+              userResp: state.answers[q.qid]
+            }));
+
+          if (state.detail && state.questions[3]) {
+            answeredQuestions.push({
+              ...state.questions[3],
+              userResp: state.detail
+            });
+          }
+
+          const LANG_MAP = {
+            'English': 'en',
+            'Tamil': 'ta',
+            'Tamil-English Mix': 'ta-en',
+            'Hindi': 'hi',
+            'Telugu': 'te',
+            'Kannada': 'kn',
+            'Malayalam': 'ml',
+            'Bengali': 'bn',
+            'Marathi': 'mr',
+            'Gujarati': 'gu'
+          };
+
           const payload = {
-            language: state.language === 'Tamil' ? 'ta' : (state.language === 'Tamil-English Mix' ? 'ta-en' : 'en'),
+            reviewQuestions: answeredQuestions,
+            language: LANG_MAP[state.language] || 'en',
             writingStyle: state.style,
-            answers: Object.entries(state.answers).map(([qid, response]) => ({
-              qid,
-              response
-            })),
-            customDetail: state.detail
+            customDetail: state.detail || '',
+            variantCount: 2
           };
 
           const headers = new Headers();
           headers.append("Content-Type", "application/json");
-          if (!API_CONFIG.isLocalMock) {
-            headers.append("Authorization", API_CONFIG.getAuthHeader(locId));
-          }
+          headers.append("Authorization", BASIC_AUTH_HEADER);
+          headers.append("X-App-Ver", "1.0");
 
-          const method = API_CONFIG.isLocalMock ? 'GET' : 'POST';
-          const fetchOptions = {
-            method,
-            headers
-          };
-          if (method === 'POST') {
-            fetchOptions.body = JSON.stringify(payload);
-          }
-
-          const response = await fetch(url, fetchOptions);
+          const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload)
+          });
           if (!response.ok) {
-            throw new Error(`Generation failed (status ${response.status})`);
+            const errPayload = await response.json().catch(() => ({}));
+            const errCode = errPayload?.error?.errCode || errPayload?.errCode;
+            const msg = errPayload?.error?.cause || errPayload?.error?.errMsg || errPayload?.error?.msg || errPayload?.error || `Generation failed (${response.status})`;
+            throw new Error(errCode ? `${msg} (errCode ${errCode})` : msg);
           }
 
           const data = await response.json();
+          console.log("AI Generation Response payload:", data);
           document.getElementById('loading-screen').style.display = 'none';
 
           if (data && data.resp && data.resp.variants && data.resp.variants.length > 0) {
-            state.apiVariants = data.resp.variants;
+            function withBusinessName(text) {
+              if (!text) return '';
+              const brandName = document.querySelector('.brand-name')?.textContent || '𝐁𝐮𝐳𝐥 𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬';
+              return text
+                .replaceAll('𝐁𝐮𝐳𝐥 𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬', brandName)
+                .replaceAll('Buzl Digital Solutions', brandName);
+            }
+            state.apiVariants = data.resp.variants.map(v => ({
+              ...v,
+              text: withBusinessName(v.text)
+            }));
             renderVariantsTabs(state.apiVariants);
             
             const initialText = state.apiVariants[0].text;
@@ -2728,13 +3508,14 @@
             updateDraftMetrics(initialText);
             
             document.getElementById('draft-section').style.display = 'block';
+            saveSessionState();
             scrollToForm();
           } else {
             throw new Error("No variants found in generation API response.");
           }
         } catch (err) {
           console.error("API 2 generation error:", err);
-          showToast("Error generating review. Using fallback templates.", "error");
+          showToast("Error: " + err.message + " (Using fallback)", "error");
           document.getElementById('loading-screen').style.display = 'none';
           
           // Force fallback to static generation
@@ -2755,6 +3536,10 @@
       document.getElementById('draft-textarea').value = reviewText;
       updateStarPreview('draft-star-preview', 'draft-star-text', state.experience);
       updateDraftMetrics(reviewText);
+      
+      state.apiVariants = [{ index: 0, text: reviewText }];
+      saveSessionState();
+
       document.getElementById('draft-section').style.display = 'block';
       scrollToForm();
     }
@@ -2857,11 +3642,10 @@
       }
     }
 
-    // Review templates and text generator
     function generateReviewDraftText() {
-      const s = state.service;
-      const exp = state.experience;
-      const likes = state.likes;
+      const s = state.service || (state.answers && Object.values(state.answers)[0]) || 'service';
+      const exp = inferExperienceLevel();
+      const likes = state.likes || [];
       const details = state.detail;
       const style = state.style;
       const lang = state.language;
@@ -3379,9 +4163,11 @@
       };
 
       try {
-        const openers = segmentPool[lang]['Openers'][exp][style];
-        const connectors = likes.length > 0 ? segmentPool[lang]['Connectors'][exp]['Likes'] : segmentPool[lang]['Connectors'][exp]['NoLikes'];
-        const closers = segmentPool[lang]['Closers'][exp][style];
+        // Gracefully fall back to English templates if selected language isn't in static pool
+        const activeLang = segmentPool[lang] ? lang : 'English';
+        const openers = segmentPool[activeLang]['Openers'][exp][style];
+        const connectors = likes.length > 0 ? segmentPool[activeLang]['Connectors'][exp]['Likes'] : segmentPool[activeLang]['Connectors'][exp]['NoLikes'];
+        const closers = segmentPool[activeLang]['Closers'][exp][style];
 
         const opener = openers[Math.floor(Math.random() * openers.length)];
         const connector = connectors[Math.floor(Math.random() * connectors.length)];
@@ -3410,23 +4196,38 @@
 
     // Dynamic Regenerate button action
     function regenerateDraft() {
+      // Always re-read detail textarea so edits after "Modify Answers" are captured
+      const detailEl = document.getElementById('detail-text');
+      if (detailEl) state.detail = detailEl.value.trim();
+
       if (state.isDynamic) {
+        // For dynamic: hide draft, show shimmer, then generate via API
+        document.getElementById('draft-section').style.display = 'none';
         generateReviewProcess();
       } else {
-        const reviewText = generateReviewDraftText();
-        document.getElementById('draft-textarea').value = reviewText;
-        updateDraftMetrics(reviewText);
-        showToast('Draft updated with a new version.');
+        // For static: show shimmer briefly, then swap in the new draft
+        const draftSection = document.getElementById('draft-section');
+        const loadingScreen = document.getElementById('loading-screen');
+
+        draftSection.style.display = 'none';
+        loadingScreen.style.display = 'flex';
+
+        setTimeout(() => {
+          const reviewText = generateReviewDraftText();
+          document.getElementById('draft-textarea').value = reviewText;
+          updateDraftMetrics(reviewText);
+          
+          state.apiVariants = [{ index: 0, text: reviewText }];
+          saveSessionState();
+
+          loadingScreen.style.display = 'none';
+          draftSection.style.display = 'block';
+          showToast('Draft updated with a new version.');
+        }, 1200);
       }
     }
 
-    // Toggle custom checkbox values
-    function toggleConfirm(event) {
-      if (event.target.tagName === 'INPUT') return;
-      const chk = document.getElementById('checkbox-confirm');
-      chk.checked = !chk.checked;
-      updateActionButtonsState(chk.checked);
-    }
+
 
     // Keep confirm checkbox input changes synchronized
     document.getElementById('checkbox-confirm').addEventListener('change', function(e) {
@@ -3436,6 +4237,9 @@
     // Dynamic validation indicator for specific detail textarea
     document.getElementById('detail-text').addEventListener('input', function(e) {
       const val = e.target.value.trim();
+      state.detail = val;
+      saveSessionState();
+
       const feedback = document.getElementById('detail-feedback');
       if (val.length >= 10) {
         e.target.classList.add('valid-detail');
@@ -3449,6 +4253,16 @@
     // Real-time review metrics calculation for draft textarea
     document.getElementById('draft-textarea').addEventListener('input', function(e) {
       updateDraftMetrics(e.target.value);
+      if (state.apiVariants && state.apiVariants.length > 0) {
+        const activeTab = document.querySelector('.variant-tab.active');
+        if (activeTab) {
+          const index = parseInt(activeTab.textContent.replace('Draft ', '')) - 1;
+          if (state.apiVariants[index]) {
+            state.apiVariants[index].text = e.target.value;
+            saveSessionState();
+          }
+        }
+      }
     });
 
     function updateActionButtonsState(isConfirmChecked) {
@@ -3516,6 +4330,46 @@
       }
     }
 
+    function validateReviewerDetails() {
+      return { name: 'Anonymous Customer', contact: 'No Contact Provided' };
+    }
+
+    async function saveCustomerReviewToBackend(reviewText) {
+      const locId = state.locationId;
+      if (!locId) {
+        throw new Error('Location id is missing. Cannot save review.');
+      }
+
+      const details = validateReviewerDetails();
+      if (!details) {
+        throw new Error('Reviewer name and contact details are required.');
+      }
+
+
+
+      const url = API_CONFIG.getCustomerReviewsUrl(locId);
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append("Authorization", BASIC_AUTH_HEADER);
+      headers.append("X-App-Ver", "1.0");
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          review: reviewText,
+          reviewer: details.name,
+          contact: details.contact
+        })
+      });
+
+      if (!res.ok) {
+        const errPayload = await res.json().catch(() => ({}));
+        const detail = errPayload?.error?.msg || errPayload?.error?.cause || errPayload?.error || `Failed to save review (${res.status})`;
+        throw new Error(detail);
+      }
+    }
+
     // Copying and Clipboard controls
     function copyReviewOnly() {
       const isConfirmed = document.getElementById('checkbox-confirm').checked;
@@ -3523,14 +4377,28 @@
         highlightCheckbox();
         return;
       }
+      
+      const details = validateReviewerDetails();
+      if (!details) return;
+
       const reviewText = document.getElementById('draft-textarea').value;
+      
+      // 1. Copy immediately (critical path)
       copyTextToClipboard(reviewText).then(() => {
         showToast('Review copied successfully.');
         transitionToSuccess();
+        
+        // 2. Fire database save in the background
+        saveCustomerReviewToBackend(reviewText).catch(err => {
+          console.warn('Background review save failed:', err);
+        });
       }).catch(err => {
         showToast('Failed to copy text. Please copy manually.', 'error');
       });
     }
+
+    let redirectTimer = null;
+    let redirectSecondsLeft = 4;
 
     function copyAndOpenGoogle() {
       const isConfirmed = document.getElementById('checkbox-confirm').checked;
@@ -3538,22 +4406,65 @@
         highlightCheckbox();
         return;
       }
+      
+      const details = validateReviewerDetails();
+      if (!details) return;
+
       const reviewText = document.getElementById('draft-textarea').value;
+      
+      // 1. Copy immediately (critical path)
       copyTextToClipboard(reviewText).then(() => {
         showToast('Review copied successfully.');
         transitionToSuccess();
-        setTimeout(() => {
-          openGoogleTab();
-        }, 800);
+        
+        // 2. Fire database save in the background
+        saveCustomerReviewToBackend(reviewText).catch(err => {
+          console.warn('Background review save failed:', err);
+        });
+        
+        // 3. Start tutorial countdown before opening Google
+        startRedirectCountdown();
       }).catch(err => {
         showToast('Failed to copy. Opening Google review page...', 'error');
-        setTimeout(() => {
-          openGoogleTab();
-        }, 800);
+        startRedirectCountdown();
       });
     }
 
+    function startRedirectCountdown() {
+      if (redirectTimer) clearInterval(redirectTimer);
+      
+      redirectSecondsLeft = 4;
+      const btn = document.getElementById('success-open-btn');
+      if (btn) {
+        btn.querySelector('span').textContent = `Opening Google in ${redirectSecondsLeft}s...`;
+      }
+
+      redirectTimer = setInterval(() => {
+        redirectSecondsLeft--;
+        if (redirectSecondsLeft <= 0) {
+          clearInterval(redirectTimer);
+          redirectTimer = null;
+          openGoogleTab();
+        } else {
+          if (btn) {
+            btn.querySelector('span').textContent = `Opening Google in ${redirectSecondsLeft}s...`;
+          }
+        }
+      }, 1000);
+    }
+
     function openGoogleTab() {
+      // Clear redirect countdown if manually clicked or automatically fired
+      if (redirectTimer) {
+        clearInterval(redirectTimer);
+        redirectTimer = null;
+      }
+      
+      const btn = document.getElementById('success-open-btn');
+      if (btn) {
+        btn.querySelector('span').textContent = 'Open Google Review Page Again';
+      }
+
       window.open(GOOGLE_REVIEW_LINK, '_blank');
     }
 
@@ -3564,7 +4475,15 @@
     }
 
     function restartAssistant() {
-      // Stop speech recognition if listening
+      // Clear auto-save session state
+      clearSessionState();
+
+      // Stop speech/redirect timer if active
+      if (redirectTimer) {
+        clearInterval(redirectTimer);
+        redirectTimer = null;
+      }
+
       if (isListening && recognitionInstance) {
         recognitionInstance.stop();
       }
@@ -3582,6 +4501,8 @@
       const allSelectables = document.querySelectorAll('.option-card, .chip-item');
       allSelectables.forEach(item => item.classList.remove('selected'));
 
+      state.isDynamic = !!state.locationId;
+
       if (state.isDynamic) {
         renderDynamicQuestions(state.questions);
         const likesGroup = document.getElementById('static-likes-group');
@@ -3594,8 +4515,15 @@
       // Re-apply selected class to default choices
       const styleSimple = document.querySelector('[onclick="selectStyle(this, \'Simple\')"]');
       if (styleSimple) styleSimple.classList.add('selected');
-      const langEnglish = document.querySelector('[onclick="selectLanguage(this, \'English\')"]');
+      
+      const langEnglish = document.getElementById('lang-card-english');
       if (langEnglish) langEnglish.classList.add('selected');
+
+      const selectElem = document.getElementById('lang-select-other');
+      if (selectElem) selectElem.value = "";
+
+      const dropdownWrap = document.querySelector('.lang-dropdown-wrapper');
+      if (dropdownWrap) dropdownWrap.classList.remove('selected');
 
       const detailText = document.getElementById('detail-text');
       detailText.value = '';
@@ -3658,10 +4586,70 @@
         });
       });
 
-      // Extract locationId and initialize dynamic API loading if present
-      state.locationId = extractLocationId();
-      if (state.locationId) {
-        loadDynamicQuestions();
+      // Initialize features carousel autoscroll on mobile screens
+      function initFeaturesCarouselAutoscroll() {
+        const grid = document.querySelector('.features-grid');
+        if (!grid) return;
+
+        let intervalId = null;
+        let isInteracting = false;
+        let interactionTimeout = null;
+
+        function startAutoScroll() {
+          if (intervalId) clearInterval(intervalId);
+          intervalId = setInterval(() => {
+            if (window.innerWidth > 768 || isInteracting) return;
+
+            const cards = grid.querySelectorAll('.feature-card');
+            if (cards.length <= 1) return;
+
+            const scrollLeft = grid.scrollLeft;
+            const cardWidth = cards[0].offsetWidth + 12; // card width + gap (0.75rem = 12px)
+            let nextIndex = Math.round(scrollLeft / cardWidth) + 1;
+
+            if (nextIndex >= cards.length) {
+              grid.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+              grid.scrollTo({ left: nextIndex * cardWidth, behavior: 'smooth' });
+            }
+          }, 3500);
+        }
+
+        function handleUserInteraction() {
+          isInteracting = true;
+          if (interactionTimeout) clearTimeout(interactionTimeout);
+          interactionTimeout = setTimeout(() => {
+            isInteracting = false;
+          }, 5000);
+        }
+
+        grid.addEventListener('touchstart', handleUserInteraction, { passive: true });
+        grid.addEventListener('mousedown', handleUserInteraction);
+        grid.addEventListener('scroll', () => {
+          if (isInteracting) handleUserInteraction();
+        }, { passive: true });
+
+        startAutoScroll();
+      }
+
+      initFeaturesCarouselAutoscroll();
+
+      // Extract locationId
+      const currentLocId = extractLocationId();
+      
+      // Attempt to restore session state
+      const hasSaved = restoreSessionState();
+      
+      if (hasSaved && state.locationId === currentLocId) {
+        applyRestoredStateToDOM();
+      } else {
+        clearSessionState();
+        state.locationId = currentLocId;
+        if (state.locationId) {
+          loadDynamicQuestions();
+        } else {
+          useStaticFallbackFlow();
+        }
       }
     });
 
