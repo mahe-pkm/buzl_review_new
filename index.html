@@ -2644,6 +2644,11 @@
 
       // Restore Step 1 option selections
       if (state.isDynamic) {
+        const dynamicContainer = document.getElementById('dynamic-questions-container');
+        const staticContainer = document.getElementById('static-questions-container');
+        if (dynamicContainer) dynamicContainer.style.display = 'block';
+        if (staticContainer) staticContainer.style.display = 'none';
+
         renderDynamicQuestions(state.questions);
         const likesGroup = document.getElementById('static-likes-group');
         if (likesGroup) likesGroup.style.display = 'none';
@@ -2653,6 +2658,11 @@
           if (card) card.classList.add('selected');
         });
       } else {
+        const dynamicContainer = document.getElementById('dynamic-questions-container');
+        const staticContainer = document.getElementById('static-questions-container');
+        if (dynamicContainer) dynamicContainer.style.display = 'none';
+        if (staticContainer) staticContainer.style.display = 'block';
+
         const likesGroup = document.getElementById('static-likes-group');
         if (likesGroup) likesGroup.style.display = 'block';
 
