@@ -4506,6 +4506,9 @@
     }
 
     function transitionToSuccess() {
+      // Clear saved draft state on success so subsequent visits start fresh
+      clearSessionState();
+      
       document.getElementById('draft-section').style.display = 'none';
       document.getElementById('success-screen').style.display = 'block';
       scrollToForm();
@@ -4541,12 +4544,28 @@
       state.isDynamic = !!state.locationId;
 
       if (state.isDynamic) {
+        const dynamicContainer = document.getElementById('dynamic-questions-container');
+        const staticContainer = document.getElementById('static-questions-container');
+        if (dynamicContainer) dynamicContainer.style.display = 'block';
+        if (staticContainer) staticContainer.style.display = 'none';
+
         renderDynamicQuestions(state.questions);
         const likesGroup = document.getElementById('static-likes-group');
         if (likesGroup) likesGroup.style.display = 'none';
+
+        if (state.questions && state.questions[0] && state.questions[0].responseGuidance) {
+          updateBrandUI(state.questions[0].responseGuidance.location);
+        }
       } else {
+        const dynamicContainer = document.getElementById('dynamic-questions-container');
+        const staticContainer = document.getElementById('static-questions-container');
+        if (dynamicContainer) dynamicContainer.style.display = 'none';
+        if (staticContainer) staticContainer.style.display = 'block';
+
         const likesGroup = document.getElementById('static-likes-group');
         if (likesGroup) likesGroup.style.display = 'block';
+
+        updateBrandUI('𝐁𝐮𝐳𝐥 𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬');
       }
 
       // Re-apply selected class to default choices
