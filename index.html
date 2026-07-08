@@ -2967,6 +2967,13 @@
       }
     }
 
+    function scrollToDraft() {
+      const element = document.getElementById('draft-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
     // Helper to trigger pulse click wave animation
     function triggerPulse(element) {
       if (!element) return;
@@ -3525,7 +3532,7 @@
             
             document.getElementById('draft-section').style.display = 'block';
             saveSessionState();
-            scrollToForm();
+            setTimeout(scrollToDraft, 100);
           } else {
             throw new Error("No variants found in generation API response.");
           }
@@ -3557,7 +3564,7 @@
       saveSessionState();
 
       document.getElementById('draft-section').style.display = 'block';
-      scrollToForm();
+      setTimeout(scrollToDraft, 100);
     }
 
     // Go back to edit answers from review draft screen
@@ -4238,6 +4245,7 @@
           toggleLoadingScreen(false);
           draftSection.style.display = 'block';
           showToast('Draft updated with a new version.');
+          setTimeout(scrollToDraft, 100);
         }, 1200);
       }
     }
