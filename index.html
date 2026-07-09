@@ -9,6 +9,11 @@
   <meta name="description" content="Draft an honest Google review for Buzl Digital Solutions based on your real experience using our interactive review assistant.">
   <meta name="robots" content="index, follow">
   
+  <!-- HTTP Cache-Control: Prevents browsers from caching this page stale -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
   <!-- Inter Font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2787,8 +2792,8 @@
 
         const data = JSON.parse(savedData);
         
-        // TTL Check: 1 hour expiration (3,600,000ms)
-        if (!data.timestamp || (Date.now() - data.timestamp > 3600000)) {
+        // TTL Check: 10 minutes expiration (600,000ms)
+        if (!data.timestamp || (Date.now() - data.timestamp > 600000)) {
           clearSessionState();
           return false;
         }
