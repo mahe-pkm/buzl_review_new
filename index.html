@@ -2721,11 +2721,7 @@
     // --- Dynamic API Helpers ---
 
     function extractLocationId() {
-      // 1. Check URL search query parameters
-      let locId = urlParams.get('locationId') || urlParams.get('locId') || urlParams.get('placeid');
-      if (locId) return locId;
-
-      // 2. Check URL path segments (e.g. buzl.rclk.in/locn-dev-397)
+      // 1. Check URL path segments (e.g. buzl.rclk.in/locn-dev-397) [PRIMARY]
       const path = window.location.pathname;
       const segments = path.split('/').filter(s => s.trim() !== '');
       if (segments.length > 0) {
@@ -2735,6 +2731,12 @@
           return lastSegment;
         }
       }
+
+      // 2. Check URL search query parameters (?locationId=...) [FALLBACK]
+      const currentParams = new URLSearchParams(window.location.search);
+      let locId = currentParams.get('locationId') || currentParams.get('locId') || currentParams.get('placeid');
+      if (locId) return locId;
+
       return null;
     }
 
