@@ -1,85 +1,163 @@
-# 𝐁𝐮𝐳𝐥 𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬 — Google Review Assistant
+# 📝 Buzl Review Assistant
 
-A responsive, premium, and dynamic single-page web application designed to help customers draft honest reviews for businesses and seamlessly publish them on Google. The app dynamically personalizes itself based on URL routing parameters.
-
----
-
-## 🚀 Key Features
-
-*   **🧬 Dynamic Location-Based Routing**: 
-    *   Automatically parses `locationId` from pathnames (e.g. `/locn-dev-397`) and query strings (e.g. `?locationId=...`).
-    *   Hides static template options in dynamic mode, keeping the focus entirely on fetched questions.
-*   **📋 Dynamic Questionnaire (API 1 Integration)**:
-    *   Fetches custom location questions dynamically via `GET /api/locations/{locationId}/reviewquestions` with Basic Auth.
-    *   Updates branding headers, subheadings, and instructions dynamically based on the fetched location name.
-    *   Updates the destination Google Review redirect link dynamically using the place ID returned by the API.
-*   **🔄 AI Review Draft Generation (API 2 Integration)**:
-    *   Posts user answers, style choices, and language parameters to the backend AI generation endpoint.
-    *   Displays multiple review variants using a premium tabbed interface.
-*   **🔌 Local Mock Testing Mode**:
-    *   Automatically falls back to local JSON assets (`/API sample json/`) when running on `localhost` or if `?mock=true` is present, facilitating mock testing offline.
-*   **🎙️ Real-Time Voice-to-Text Dictation**: 
-    *   Transcribes speech word-by-word in real-time as the user speaks.
-    *   Uses a synchronous focus trigger to guarantee that mobile virtual keyboards pop up immediately on tap.
-    *   Provides high-visibility recording status with red pulsing glows (`.voice-active`) and dynamic instructions.
-*   **📊 Review Quality & Length Meter**: Live word counter, reading duration estimator, and visual strength indicator (Too Short ➡️ Good Review ➡️ Superb!) to encourage helpful reviews.
-*   **♿ Accessibility First (WCAG 2.1 AA Compliance)**:
-    *   All cards and chips are focusable (`tabindex="0"`) and announced correctly (`role="button"`) by screen readers.
-    *   Interactive items can be selected using keyboard inputs (**Space** / **Enter**).
-    *   Distinct high-contrast focus rings (`:focus-visible`) highlight selections.
-*   **📱 Mobile-First Responsive Design**: 
-    *   Optimized layout grids for screen sizes down to `320px` (iPhone SE).
-    *   Tap targets compliant with Fitts's Law ($>48\text{px}\times48\text{px}$).
-    *   Header wraps and layouts adapt dynamically to tablet, viewport, and phone breakpoints.
-*   **🛡️ Jitter-Free Validation Warnings**: Copy buttons remain active but prompt interactive validation warnings (flashing red outline and card-styled alerts) if required steps are incomplete, without causing adjacent layout displacement.
+A static site generator and desktop management tool that creates branded, location-specific Google Review landing pages for Buzl partner clients.
 
 ---
 
-## 🛠️ Local Development & Testing
+## 📁 Project Structure
 
-Microphone features require secure contexts (HTTPS or `localhost`).
+```
+.
+├── index.html                    # Generic root landing page (QR scanner + code entry)
+├── site-generator/
+│   ├── template.html             # Master client page template
+│   ├── vendors.json              # Client configuration registry
+│   ├── generate.py               # Static site compiler
+│   ├── gui_manager.py            # Tkinter desktop GUI manager
+│   ├── server.py                 # Local SPA testing server
+│   └── dist/                     # Compiled output (ready to deploy)
+│       ├── index.html
+│       ├── .htaccess
+│       ├── 269/
+│       ├── locn-dev-269/
+│       ├── 409/
+│       ├── locn-dev-409/
+│       └── 67ac841e7afd41ccec826b52/
+└── .gitignore
+```
 
-### 1. Start a Local Server
-Run the secure local python server in the root of the project to enable HTTPS (required for camera access and speech recognition) and Clean Path-based URLs:
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Python 3.x** — No additional packages required. All scripts use standard library only.
+
+---
+
+## 🖥️ Desktop GUI Manager
+
+Launch the graphical client manager to add, edit, enable/disable clients and trigger builds:
 
 ```bash
-python "scratch/run_secure_server.py"
+cd site-generator
+python gui_manager.py
 ```
 
-*   **Welcome Portal**: `https://localhost:7894/`
-*   **Direct Path URL**: `https://localhost:7894/locn-dev-397`
-*   **Short Numeric Path URL**: `https://localhost:7894/397`
-*   *Note*: Since it uses a self-signed certificate, proceed past the browser safety warning when prompted to establish a secure origin context.
+### Features:
+| Feature | Description |
+|---------|-------------|
+| ➕ Add Client | Register a new partner client with all required details |
+| ✏️ Edit Client | Update name, Place ID, GA ID, OG metadata for an existing client |
+| 🔘 Enable / Disable | Toggle the `active` status to include or exclude from builds |
+| 🖼️ Upload OG Image | Browse and upload a custom Open Graph share thumbnail per client |
+| 🔨 Compile | Trigger `generate.py` to rebuild all active client pages into `dist/` |
 
-Alternatively, you can run a standard HTTP server (note: camera access will be blocked on mobile):
+---
 
-**Using Python:**
+## ⚙️ Compile Sites (Command Line)
+
+Build all active client pages from `vendors.json` into the `dist/` folder:
+
 ```bash
-python -m http.server 7894
+cd site-generator
+python generate.py
+```
+
+- Inactive clients (`"active": false`) are **skipped** automatically.
+- The compiled `dist/` folder is deployment-ready for Apache/Nginx hosting.
+- The `.htaccess` routing file is automatically copied into `dist/`.
+
+---
+
+## 🌐 Local Testing Server
+
+Run a custom SPA-aware local server on **port 8546** that serves compiled pages and gracefully handles unknown paths:
+
+```bash
+cd site-generator
+python server.py
+```
+
+Open in your browser:
+- Root landing page: [http://localhost:8546/](http://localhost:8546/)
+- Client page (e.g.): [http://localhost:8546/269/](http://localhost:8546/269/)
+
+> Any unknown path (e.g. `/nonexistent-client/`) is automatically routed to `index.html` instead of showing a raw 404 error. The client-side JS then redirects the user back to the landing page.
+
+---
+
+## 📋 Adding a New Client
+
+### Option A — GUI (Recommended)
+1. Run `python gui_manager.py`
+2. Click **"New Client"**
+3. Fill in the form fields
+4. Click **"Save"** then **"Compile"**
+
+### Option B — Manually edit `vendors.json`
+
+```json
+{
+  "locationId": "locn-dev-XXX",
+  "shortId": "XXX",
+  "locationName": "Your Business Name",
+  "placeId": "ChIJ...",
+  "googleAnalyticsId": "G-XXXXXXXXXX",
+  "ogTitle": "Review Your Business on Google",
+  "ogDescription": "Draft an honest Google review using our interactive assistant.",
+  "ogImage": "https://yourdomain.com/assets/og-image-XXX.png",
+  "active": true
+}
+```
+
+Then run:
+```bash
+python generate.py
 ```
 
 ---
 
-## 📂 Project Structure
+## 🔑 API Credentials
 
+The API authorization header is stored as a Base64-encoded Basic Auth constant inside each HTML file:
+
+```javascript
+const BASIC_AUTH_HEADER = 'Basic <base64(username:password)>';
 ```
-├── index.html                  # Main application entry point (1-step layout & rewriter client)
-├── .htaccess                   # Apache rewrite rules enabling SPA path routing on Hostinger
-├── .gitignore                  # Git file exclusions (Ver2/ excluded)
-├── README.md                   # Project documentation
-├── CHANGELOG.md                # Version history
-├── API_INTEGRATION_GUIDE.md    # Technical requirements guide for backend API developers
-├── scratch/                    # Internal folder for utility scripts
-│   └── run_secure_server.py    # HTTPS local server with dynamic self-signed certs & SPA routing
-└── API sample json/            # Folder containing local mock json/txt responses
-    ├── reviewquestions-locn-dev-269.json
-    └── reviewsgeneration.txt
-```
+
+### ⚠️ Security Warning for Production
+Never expose raw API credentials in client-side JavaScript on a public site.
+
+**Recommended approach:** Use a **server-side proxy** (PHP, Nginx, or Cloudflare Worker) to inject the `Authorization` header before forwarding requests to the backend. See the [API Integration Guide](./API_INTEGRATION_GUIDE.md) for details.
 
 ---
 
-## 🎨 Design System & Colors
-*   **Primary Accent**: `#2563EB` (Cobalt Blue)
-*   **Backgrounds**: `#F8FAFC` (Slate Tint) & `#FFFFFF`
-*   **Success state**: `#16A34A` (Forest Green)
-*   **Warning state**: `#DC2626` (Crimson)
+## 🚢 Deployment
+
+1. Compile the sites: `python generate.py`
+2. Upload the contents of `site-generator/dist/` to your web server root.
+3. Ensure the `.htaccess` file is present (Apache `mod_rewrite` must be enabled).
+4. All client paths (e.g. `/269/`, `/locn-dev-269/`) will resolve correctly.
+
+---
+
+## 🧪 Automated Verification
+
+A Selenium-based test script is available to verify all compiled client pages load correctly:
+
+```bash
+pip install selenium
+python verify_star_rating.py
+```
+
+Tests cover:
+- ✅ Brand name rendering per client
+- ✅ Dynamic question options loading from the API
+- ✅ 404 routing fallback (invalid paths return `200` via SPA routing)
+
+---
+
+## 📄 License
+
+Internal use only — Buzl Technologies.
