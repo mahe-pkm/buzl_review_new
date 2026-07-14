@@ -3,11 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>𝐁𝐮𝐳𝐥 𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬 — Google Review Assistant</title>
+  <title>{{OG_TITLE}}</title>
   
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Draft an honest Google review for Buzl Digital Solutions based on your real experience using our interactive review assistant.">
+  <!-- SEO & Open Graph Meta Tags -->
+  <meta name="description" content="{{OG_DESCRIPTION}}">
   <meta name="robots" content="index, follow">
+  <meta property="og:title" content="{{OG_TITLE}}">
+  <meta property="og:description" content="{{OG_DESCRIPTION}}">
+  <meta property="og:image" content="{{OG_IMAGE}}">
+  <meta property="og:url" content="https://gobuzl.com/{{SHORT_ID}}">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{OG_TITLE}}">
+  <meta name="twitter:description" content="{{OG_DESCRIPTION}}">
+  <meta name="twitter:image" content="{{OG_IMAGE}}">
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{GOOGLE_ANALYTICS_ID}}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{GOOGLE_ANALYTICS_ID}}');
+    
+    // Unified Custom Analytics Trigger
+    const Analytics = {
+      track: function(eventName, eventParams = {}) {
+        const mergedParams = {
+          location_id: '{{LOCATION_ID}}',
+          ...eventParams
+        };
+        console.log(`[Analytics] Event: ${eventName}`, mergedParams);
+        if (typeof gtag === 'function') {
+          gtag('event', eventName, mergedParams);
+        }
+      }
+    };
+  </script>
   
   <!-- HTTP Cache-Control: Prevents browsers from caching this page stale -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -3046,7 +3080,7 @@
           }
           
           // Dynamically update redirect links if Place ID returned, falling back to local PLACE_ID_MAP
-          const resolvedPlaceId = data.resp.placeId || data.resp.googlePlaceId || PLACE_ID_MAP[locId] || 'ChIJK6_papbChmgRCAqryUDNfYU';
+          const resolvedPlaceId = data.resp.placeId || data.resp.googlePlaceId || PLACE_ID_MAP[locId] || '{{PLACE_ID}}';
           if (data.resp.reviewUrl && !data.resp.placeId && !data.resp.googlePlaceId && !PLACE_ID_MAP[locId]) {
             GOOGLE_REVIEW_LINK = data.resp.reviewUrl;
           } else {
@@ -3066,16 +3100,10 @@
         }
       } catch (err) {
         console.error("Failed to load dynamic configuration:", err);
-        showToast("Invalid code or location not found. Returning to landing page.", "error");
-        
-        clearSessionState();
-        state.locationId = '';
-        
-        if (window.history.pushState) {
-          window.history.pushState(null, '', '/');
-        }
-        
-        showLandingPage();
+        showToast("Location details not found. Redirecting to landing page...", "error");
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
       }
     }
 
@@ -3271,6 +3299,13 @@
       updateQuestionsVisibility();
       
       saveSessionState();
+      
+      if (typeof Analytics !== 'undefined') {
+        Analytics.track('answer_selected', {
+          question_id: qid,
+          selected_option: responseVal
+        });
+      }
       
       // Auto-scroll to next visible group or next step button (skip if selecting Other)
       if (responseVal !== 'Other') {
@@ -3813,6 +3848,13 @@
     // Simulated loading and review display
     // Dynamic review generation (API 2) or static fallback
     async function generateReviewProcess() {
+      if (typeof Analytics !== 'undefined') {
+        Analytics.track('review_generated', {
+          language: state.language,
+          writing_style: state.style,
+          custom_detail_length: state.detail ? state.detail.length : 0
+        });
+      }
       // Keep form and stepper visible, disable the Next button during loading state
       const btnNext = document.getElementById('btn-next');
       if (btnNext) {
@@ -3901,6 +3943,12 @@
           console.log("AI Generation Response payload:", data);
           toggleLoadingScreen(false);
           
+          if (typeof Analytics !== 'undefined') {
+            Analytics.track('review_generated_success', {
+              variants_count: data?.resp?.variants?.length || 0
+            });
+          }
+          
           if (btnNext) {
             btnNext.disabled = false;
             btnNext.classList.remove('btn-disabled');
@@ -3939,6 +3987,12 @@
           console.error("API 2 generation error:", err);
           showToast("Error: " + err.message + " (Using fallback)", "error");
           toggleLoadingScreen(false);
+          
+          if (typeof Analytics !== 'undefined') {
+            Analytics.track('review_generated_error', {
+              error_message: err.message
+            });
+          }
           
           if (btnNext) {
             btnNext.disabled = false;
@@ -4850,6 +4904,14 @@
         showToast('Review copied successfully.');
         transitionToSuccess();
         
+        if (typeof Analytics !== 'undefined') {
+          Analytics.track('review_copied', {
+            variant_index: document.querySelector('.tab-btn.active')?.dataset.index || 0,
+            review_length: reviewText.length,
+            review_rating: inferExperienceLevel()
+          });
+        }
+        
         // 2. Fire database save in the background
         saveCustomerReviewToBackend(reviewText).catch(err => {
           console.warn('Background review save failed:', err);
@@ -4876,6 +4938,14 @@
         showToast('Review copied successfully.');
         transitionToSuccess();
         
+        if (typeof Analytics !== 'undefined') {
+          Analytics.track('review_copied', {
+            variant_index: document.querySelector('.tab-btn.active')?.dataset.index || 0,
+            review_length: reviewText.length,
+            review_rating: inferExperienceLevel()
+          });
+        }
+        
         // 2. Fire database save in the background
         saveCustomerReviewToBackend(reviewText).catch(err => {
           console.warn('Background review save failed:', err);
@@ -4891,6 +4961,11 @@
     }
 
     function openGoogleTab() {
+      if (typeof Analytics !== 'undefined') {
+        Analytics.track('google_redirect_click', {
+          place_id: GOOGLE_REVIEW_LINK.includes('placeid=') ? GOOGLE_REVIEW_LINK.split('placeid=')[1] : 'unknown'
+        });
+      }
       window.open(GOOGLE_REVIEW_LINK, '_blank');
     }
 
@@ -5063,6 +5138,9 @@
     }
 
     function restartAssistant() {
+      if (typeof Analytics !== 'undefined') {
+        Analytics.track('restart_assistant');
+      }
       // Clear auto-save session state
       clearSessionState();
 
@@ -5249,16 +5327,28 @@
 
       initFeaturesCarouselAutoscroll();
 
-      // Extract locationId
-      const currentLocId = extractLocationId();
-      
-      // Always start fresh: clear any old session state
+      // Clear any leftover state
       clearSessionState();
-      state.locationId = currentLocId;
-      if (state.locationId) {
-        loadDynamicQuestions();
-      } else {
-        showLandingPage();
+      
+      // Load variables pre-baked by the generator
+      state.locationId = '{{LOCATION_ID}}';
+      state.isDynamic = true;
+      GOOGLE_REVIEW_LINK = 'https://search.google.com/local/writereview?placeid={{PLACE_ID}}';
+      
+      // Hide generic welcome portal landing screen
+      const landing = document.getElementById('landing-section');
+      if (landing) landing.style.display = 'none';
+      
+      const hero = document.getElementById('hero-section');
+      if (hero) hero.style.display = 'block';
+
+      // Update basic headers and fetch questions
+      updateBrandUI('{{LOCATION_NAME}}');
+      loadDynamicQuestions();
+      
+      // Track initial landing page_view
+      if (typeof Analytics !== 'undefined') {
+        Analytics.track('page_view');
       }
     });
 

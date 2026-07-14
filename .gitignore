@@ -15,10 +15,11 @@ Desktop.ini
 # Project custom ignores
 Ver2/
 Example folder/
-site-generator/
+# Compiled output - do not commit
+site-generator/dist/
 *.pdf
 diagnose.html
 *.pem
 *.zip
-
-
+*.py[cod]
+__pycache__/

@@ -2590,7 +2590,12 @@
       <!-- Draft Output Section -->
       <div id="draft-section" style="display: none; animation: fadeIn var(--transition-normal);">
         <h2 style="margin-bottom: 0.5rem;">Review Draft Based on Your Real Experience</h2>
-
+        <!-- Star Preview Simulation -->
+        <div class="star-preview-container">
+          <span class="star-preview-label">Your Google Rating:</span>
+          <div class="star-preview-stars" id="draft-star-preview"></div>
+          <span class="star-preview-text" id="draft-star-text"></span>
+        </div>
 
         <!-- Variants Tabs Container -->
         <div class="variants-tab-container" id="variants-tab-container" style="display: none;"></div>
@@ -2693,7 +2698,7 @@
               </div>
               <div class="mock-textarea-field">
                 <span class="mock-placeholder">Share details of your own experience...</span>
-                <span class="mock-text-pasted">The service was excellent. The staff were friendly and helpful throughout my visit...</span>
+                <span class="mock-text-pasted">The ambience at Santhiya Chandran IAS Academy is excellent. It creates a focused environment...</span>
                 <span class="mock-typing-cursor">|</span>
               </div>
               
@@ -2909,9 +2914,7 @@
 
     const PLACE_ID_MAP = {
       'locn-dev-397': 'ChIJbfT9ntf1qjsRCjeaPBrgenM', // Santhiya Chandran IAS Academy
-      'locn-dev-269': 'ChIJbfT9ntf1qjsRCjeaPBrgenM', // Santhiya Chandran IAS Academy
-      'locn-dev-409': 'ChIJ1c8Qopy65zsRfM0IZ7Tg5n8', // Buzl Partner 409
-      '67ac841e7afd41ccec826b52': 'ChIJK6_papbChmgRCAqryUDNfYU' // Buzl Partner 67ac84
+      'locn-dev-269': 'ChIJbfT9ntf1qjsRCjeaPBrgenM'  // Santhiya Chandran IAS Academy
     };
 
     // Configuration for APIs
@@ -3066,16 +3069,8 @@
         }
       } catch (err) {
         console.error("Failed to load dynamic configuration:", err);
-        showToast("Invalid code or location not found. Returning to landing page.", "error");
-        
-        clearSessionState();
-        state.locationId = '';
-        
-        if (window.history.pushState) {
-          window.history.pushState(null, '', '/');
-        }
-        
-        showLandingPage();
+        showToast("Using default fallback review template.", "error");
+        useStaticFallbackFlow();
       }
     }
 
@@ -3171,10 +3166,7 @@
         
         // Use consistent 2-column options-grid layout for dynamic questions
         
-        // Fix: Use default suggested options if the API payload omits them
-        const responses = q.suggestedResponses || ["Excellent", "Good", "Average", "Disappointing"];
-        
-        responses.forEach(resp => {
+        q.suggestedResponses.forEach(resp => {
           const card = document.createElement('div');
           card.className = 'option-card';
           card.setAttribute('role', 'radio');
@@ -3204,8 +3196,7 @@
         formGroup.appendChild(grid);
 
         // Check if suggestedResponses contains "Other" and add detail input
-        // Fix: Null-safe check before calling includes()
-        const hasOther = (q.suggestedResponses || []).includes('Other');
+        const hasOther = q.suggestedResponses.includes('Other');
         if (hasOther) {
           const otherWrapper = document.createElement('div');
           otherWrapper.className = 'other-input-wrapper';
@@ -3748,6 +3739,9 @@
       strengthFill.style.backgroundColor = fillColor;
       strengthText.textContent = label;
       strengthText.style.color = fillColor;
+
+      const inferredLevel = inferExperienceFromText(text);
+      updateStarPreview('draft-star-preview', 'draft-star-text', inferredLevel);
     }
 
     // Option 1: Update Star Rating simulation preview
@@ -3841,16 +3835,10 @@
           
           const answeredQuestions = state.questions
             .filter(q => isQuestionVisible(q) && state.answers[q.qid] !== undefined)
-            .map(q => {
-              const suggested = q.suggestedResponses && q.suggestedResponses.length > 0 
-                ? q.suggestedResponses 
-                : ["Excellent", "Good", "Average", "Disappointing"];
-              return {
-                ...q,
-                suggestedResponses: suggested,
-                userResp: state.answers[q.qid]
-              };
-            });
+            .map(q => ({
+              ...q,
+              userResp: state.answers[q.qid]
+            }));
 
           if (state.detail && state.questions[3]) {
             answeredQuestions.push({
@@ -3980,8 +3968,7 @@
 
       const reviewText = generateReviewDraftText();
       document.getElementById('draft-textarea').value = reviewText;
-      const inferredLevel = state.isDynamic ? inferExperienceLevel() : state.experience;
-      updateStarPreview('draft-star-preview', 'draft-star-text', inferredLevel);
+      updateStarPreview('draft-star-preview', 'draft-star-text', state.experience);
       updateDraftMetrics(reviewText);
       
       state.apiVariants = [{ index: 0, text: reviewText }];
@@ -4993,14 +4980,10 @@
           stopQrScanner();
           showToast("QR code scanned successfully!");
           
-          state.locationId = locId;
-          document.getElementById('landing-section').style.display = 'none';
+          const cleanId = locId.replace('locn-dev-', '');
           
-          // Re-enable hero if they load dynamic questions
-          const hero = document.getElementById('hero-section');
-          if (hero) hero.style.display = 'block';
-          
-          loadDynamicQuestions();
+          // Redirect immediately to the subfolder page
+          window.location.href = '/' + cleanId;
         } else {
           showToast("Scanned QR code does not contain a valid location.", "error");
         }
@@ -5016,25 +4999,18 @@
       if (!input) return;
       
       let code = input.value.trim();
-      if (/^\d+$/.test(code)) {
-        code = 'locn-dev-' + code;
-      }
-
-      if (code.length < 3) {
+      if (code.length < 1) {
         if (err) err.style.display = 'block';
         return;
       }
       
       if (err) err.style.display = 'none';
       
-      state.locationId = code;
-      document.getElementById('landing-section').style.display = 'none';
+      // Clean prefix if any
+      const cleanId = code.replace('locn-dev-', '');
       
-      // Re-enable hero
-      const hero = document.getElementById('hero-section');
-      if (hero) hero.style.display = 'block';
-      
-      loadDynamicQuestions();
+      // Redirect to the dedicated subfolder page
+      window.location.href = '/' + cleanId;
     }
 
     function updateAriaChecked(siblings, selectedElement) {
@@ -5254,9 +5230,11 @@
       
       // Always start fresh: clear any old session state
       clearSessionState();
-      state.locationId = currentLocId;
-      if (state.locationId) {
-        loadDynamicQuestions();
+      
+      if (currentLocId) {
+        const cleanId = currentLocId.replace('locn-dev-', '');
+        // Redirect to the dedicated subfolder page
+        window.location.href = '/' + cleanId;
       } else {
         showLandingPage();
       }

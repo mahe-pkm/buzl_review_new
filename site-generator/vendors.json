@@ -1,0 +1,33 @@
+[
+  {
+    "locationId": "locn-dev-269",
+    "shortId": "269",
+    "locationName": "Santhiya Chandran Academy (Branch)",
+    "placeId": "ChIJbfT9ntf1qjsRCjeaPBrgenM",
+    "googleAnalyticsId": "G-YYYYYYYYYY",
+    "ogTitle": "Review Santhiya Chandran Academy on Buzl",
+    "ogDescription": "Draft an honest Google review for Santhiya Chandran Academy using our interactive assistant.",
+    "ogImage": "https://gobuzl.com/assets/og-image-269.png"
+  },
+  {
+    "locationId": "67ac841e7afd41ccec826b52",
+    "shortId": "67ac841e7afd41ccec826b52",
+    "locationName": "Buzl Partner 67ac84",
+    "placeId": "ChIJK6_papbChmgRCAqryUDNfYU",
+    "googleAnalyticsId": "G-ZZZZZZZZZZ",
+    "ogTitle": "Review Buzl Partner 67ac84 on Google",
+    "ogDescription": "Draft an honest Google review for Buzl Partner 67ac84 using our interactive assistant.",
+    "ogImage": "https://gobuzl.com/assets/og-image-default.png"
+  },
+  {
+    "locationId": "locn-dev-409",
+    "shortId": "409",
+    "locationName": "Buzl Partner 409",
+    "placeId": "ChIJ1c8Qopy65zsRfM0IZ7Tg5n8",
+    "googleAnalyticsId": "G-XXXXXXXXXX",
+    "ogTitle": "Review Buzl Partner 409 on Google",
+    "ogDescription": "Draft an honest Google review for Buzl Partner 409 using our interactive assistant.",
+    "active": true,
+    "ogImage": "https://gobuzl.com/assets/og-image-default.png"
+  }
+]
