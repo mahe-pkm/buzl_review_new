@@ -40,33 +40,37 @@ A responsive, premium, and dynamic single-page web application designed to help 
 Microphone features require secure contexts (HTTPS or `localhost`).
 
 ### 1. Start a Local Server
-Run a local HTTP server in the root of the directory.
+Run the secure local python server in the root of the project to enable HTTPS (required for camera access and speech recognition) and Clean Path-based URLs:
+
+```bash
+python "scratch/run_secure_server.py"
+```
+
+*   **Welcome Portal**: `https://localhost:7894/`
+*   **Direct Path URL**: `https://localhost:7894/locn-dev-397`
+*   **Short Numeric Path URL**: `https://localhost:7894/397`
+*   *Note*: Since it uses a self-signed certificate, proceed past the browser safety warning when prompted to establish a secure origin context.
+
+Alternatively, you can run a standard HTTP server (note: camera access will be blocked on mobile):
 
 **Using Python:**
 ```bash
 python -m http.server 7894
 ```
 
-**Using Node.js:**
-```bash
-npx serve -l 7894
-```
-
-### 2. Run Mock Mode Testing Links
-*   **Path-Based Testing**: [http://localhost:7894/locn-dev-397?mock=true](http://localhost:7894/locn-dev-397?mock=true)
-*   **Query-Based Testing**: [http://localhost:7894/?locationId=locn-dev-269&mock=true](http://localhost:7894/?locationId=locn-dev-269&mock=true)
-
 ---
 
 ## 📂 Project Structure
 
 ```
-├── index.html                  # Main application entry point (dynamic routing and wizard code)
+├── index.html                  # Main application entry point (1-step layout & rewriter client)
 ├── .htaccess                   # Apache rewrite rules enabling SPA path routing on Hostinger
 ├── .gitignore                  # Git file exclusions (Ver2/ excluded)
 ├── README.md                   # Project documentation
 ├── CHANGELOG.md                # Version history
 ├── API_INTEGRATION_GUIDE.md    # Technical requirements guide for backend API developers
+├── scratch/                    # Internal folder for utility scripts
+│   └── run_secure_server.py    # HTTPS local server with dynamic self-signed certs & SPA routing
 └── API sample json/            # Folder containing local mock json/txt responses
     ├── reviewquestions-locn-dev-269.json
     └── reviewsgeneration.txt

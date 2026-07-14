@@ -4,6 +4,21 @@ All notable changes to the **Buzl Digital Solutions — Google Review Assistant*
 
 ---
 
+## [3.0.0] - 2026-07-14
+
+### Added
+*   **📦 Collapsible Optional Preferences Panel**: Consolidated optional selections (Review Style and Language dropdowns) into a side-by-side row collapsed by default under a `"Customize style & language"` toggle link, optimizing vertical space.
+*   **🔢 Numeric Location ID Auto-Prefix**: Enabled typing numeric IDs (e.g. `397`) in manual input fields or directly in the pathname (e.g. `/397`), automatically prefixing them to `locn-dev-397` before fetching questions.
+*   **🔒 Secure Local HTTPS Server & SPA Router**: Added `run_secure_server.py` with custom `SPASimpleHTTPRequestHandler` serving `index.html` on folder path segments (like `/397` or `/locn-dev-397`), enabling query-free path testing locally.
+*   **⚡ Instant Clipboard Copy Redirection**: Replaced the 4.5-second auto-redirect countdown with immediate new-tab redirections to Google Review page upon clipboard copy, renaming the success screen manual fallback button to `"Go to Google Review"`.
+
+### Changed
+*   **🛠️ Unified 1-Step Questionnaire Wizard**: Merged step navigation panels and progress bars into a single flat questionnaire page, styling sections inside compact `.form-sub-card` containers with a single `"Generate Review"` submit button.
+*   **🚫 Disabled Session State Fallback**: Turned `saveSessionState()` into a no-op and bypassed state loading in page initializers, ensuring browser refreshes always load completely clean.
+*   **📱 Mobile Viewport Responsive Scale**: Adjusted spacing gaps, selector paddings, and form label font sizes under `480px` screen sizes to guarantee perfect single-row alignment.
+
+---
+
 ## [2.1.0] - 2026-07-07
 
 ### Added
