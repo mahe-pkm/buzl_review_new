@@ -1737,13 +1737,23 @@
         height: 20px;
         font-size: 0.875rem;
       }
-      .options-grid .lang-select {
+      .lang-select, .options-grid .lang-select {
         height: 44px;
         padding: 0.5rem 2rem 0.5rem 0.75rem;
         font-size: 0.812rem;
       }
-      .options-grid .lang-dropdown-arrow {
+      .lang-dropdown-arrow, .options-grid .lang-dropdown-arrow {
         right: 0.75rem;
+      }
+      .dropdown-row {
+        gap: 8px;
+      }
+      .dropdown-column {
+        gap: 4px;
+      }
+      .dropdown-column .form-label {
+        font-size: 0.75rem;
+        margin-bottom: 0;
       }
       
       .experience-grid {
@@ -2051,6 +2061,77 @@
         height: 14px !important;
       }
     }
+
+    /* Nested Sub-Cards for 1-Step Layout */
+    .form-sub-card {
+      background-color: #F8FAFC; /* Soft contrast background */
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      animation: fadeIn var(--transition-normal);
+    }
+    .dropdown-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .dropdown-column {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .preferences-toggle-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .btn-toggle-preferences {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+    .btn-toggle-preferences:hover {
+      background-color: var(--primary-light);
+    }
+    .btn-toggle-preferences:active {
+      transform: scale(0.97);
+    }
+    .btn-toggle-preferences svg {
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .btn-toggle-preferences.active svg {
+      transform: rotate(180deg);
+    }
+    
+    /* Remove redundant steps styling */
+    .form-step {
+      display: block !important; /* Force all sections visible */
+      animation: none !important;
+    }
+    
+    /* Hide progress bar */
+    .progress-wrapper {
+      display: none !important;
+    }
+    
+    /* Single full-width generate button */
+    .nav-buttons {
+      margin-top: 1.5rem;
+    }
+    .nav-buttons .btn-primary {
+      width: 100% !important;
+      justify-content: center;
+    }
   </style>
 </head>
 <body>
@@ -2164,7 +2245,7 @@
         
         <div class="landing-action-card" id="manual-input-card">
           <div class="manual-input-row">
-            <input type="text" class="input-custom" id="manual-location-input" placeholder="e.g. locn-dev-397" aria-label="Enter Location Code" onkeydown="if(event.key === 'Enter') submitManualCode();" />
+            <input type="text" class="input-custom" id="manual-location-input" placeholder="e.g. 397" aria-label="Enter Location Code" onkeydown="if(event.key === 'Enter') submitManualCode();" />
             <button class="btn-primary" id="btn-manual-submit" onclick="submitManualCode()">
               <span>Go</span>
               <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -2189,11 +2270,12 @@
         
         <!-- STEP 1 -->
         <div class="form-step active" id="step-1">
-          <!-- Dynamic Questions Container -->
-          <div id="dynamic-questions-container" style="display: none;"></div>
-          
-          <!-- Static Fallback Questions -->
-          <div id="static-questions-container">
+          <div class="form-sub-card">
+            <!-- Dynamic Questions Container -->
+            <div id="dynamic-questions-container" style="display: none;"></div>
+            
+            <!-- Static Fallback Questions -->
+            <div id="static-questions-container">
             <div class="form-group">
               <label class="form-label">Which service did you use?</label>
               <div class="options-grid">
@@ -2297,10 +2379,11 @@
             </div>
           </div>
         </div>
+      </div>
 
         <!-- STEP 2 -->
         <div class="form-step" id="step-2">
-          <div class="form-group" id="static-likes-group">
+          <div class="form-sub-card" id="static-likes-group">
             <div class="form-label-wrap">
               <label class="form-label">What did you like?</label>
               <span class="label-optional">Optional</span>
@@ -2368,133 +2451,71 @@
               </div>
             </div>
           </div>
-
-          <div class="form-group">
-            <label class="form-label">Choose review style</label>
-            <div class="options-grid">
-              <div class="option-card selected" onclick="selectStyle(this, 'Simple')">
-                <div class="option-left-content">
-                  <div class="option-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                      <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                  </div>
-                  <span class="option-label">Simple</span>
-                  <div class="info-tooltip" data-tooltip="Short, direct, and straight to the point.">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="12" y1="16" x2="12" y2="12"></line>
-                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                  </div>
-                </div>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectStyle(this, 'Friendly')">
-                <div class="option-left-content">
-                  <div class="option-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-                      <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                      <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                    </svg>
-                  </div>
-                  <span class="option-label">Friendly</span>
-                  <div class="info-tooltip" data-tooltip="Warm, casual, and enthusiastic tone.">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="12" y1="16" x2="12" y2="12"></line>
-                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                  </div>
-                </div>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectStyle(this, 'Detailed')">
-                <div class="option-left-content">
-                  <div class="option-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                      <polyline points="14 2 14 8 20 8"></polyline>
-                      <line x1="16" y1="13" x2="8" y2="13"></line>
-                      <line x1="16" y1="17" x2="8" y2="17"></line>
-                      <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>
-                  </div>
-                  <span class="option-label">Detailed</span>
-                  <div class="info-tooltip" data-tooltip="Thorough, structured, and comprehensive feedback.">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="12" y1="16" x2="12" y2="12"></line>
-                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                  </div>
-                </div>
-                <div class="option-indicator"></div>
-              </div>
-              <div class="option-card" onclick="selectStyle(this, 'Professional')">
-                <div class="option-left-content">
-                  <div class="option-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                    </svg>
-                  </div>
-                  <span class="option-label">Professional</span>
-                  <div class="info-tooltip" data-tooltip="Polite, formal, and business-focused tone.">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="12" y1="16" x2="12" y2="12"></line>
-                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                  </div>
-                </div>
-                <div class="option-indicator"></div>
-              </div>
-            </div>
+          
+          <!-- Card 3: Collapsible Preferences Toggle -->
+          <div class="preferences-toggle-container">
+            <button type="button" class="btn-toggle-preferences" id="btn-toggle-preferences" onclick="togglePreferencesPanel()">
+              <span>Customize style & language</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Choose language</label>
-            <div class="options-grid">
-              <!-- Column 1: Default English Card -->
-              <div class="option-card selected" id="lang-card-english" onclick="selectLanguageCard(this, 'English')">
-                <div class="option-left-content">
-                  <span class="option-label">English</span>
+          <!-- Card 3 Expanded Content -->
+          <div class="form-sub-card preferences-panel" id="preferences-panel" style="display: none;">
+            <div class="dropdown-row">
+              <!-- Column 1: Review Style -->
+              <div class="dropdown-column">
+                <label class="form-label" for="style-select">Review Style</label>
+                <div class="lang-dropdown-wrapper">
+                  <select class="lang-select" id="style-select" onchange="selectStyleDropdown(this)">
+                    <option value="Simple">Simple</option>
+                    <option value="Friendly">Friendly</option>
+                    <option value="Detailed">Detailed</option>
+                    <option value="Professional">Professional</option>
+                  </select>
+                  <div class="lang-dropdown-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
                 </div>
-                <div class="option-indicator"></div>
               </div>
-              
-              <!-- Column 2: Dropdown for Other Languages -->
-              <div class="lang-dropdown-wrapper">
-                <select class="lang-select" id="lang-select-other" onchange="selectLanguageDropdown(this)">
-                  <option value="" disabled selected hidden>Other Languages...</option>
-                  <option value="Tamil-English Mix">Tamil-English Mix</option>
-                  <option value="Tamil">Tamil</option>
-                  <option value="Hindi">Hindi</option>
-                  <option value="Telugu">Telugu</option>
-                  <option value="Kannada">Kannada</option>
-                  <option value="Malayalam">Malayalam</option>
-                  <option value="Bengali">Bengali</option>
-                  <option value="Marathi">Marathi</option>
-                  <option value="Gujarati">Gujarati</option>
-                </select>
-                <div class="lang-dropdown-arrow">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
+
+              <!-- Column 2: Language -->
+              <div class="dropdown-column">
+                <label class="form-label" for="lang-select">Language</label>
+                <div class="lang-dropdown-wrapper">
+                  <select class="lang-select" id="lang-select" onchange="selectLanguageDropdown(this)">
+                    <option value="English">English</option>
+                    <option value="Tamil-English Mix">Tamil-English Mix</option>
+                    <option value="Tamil">Tamil</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Telugu">Telugu</option>
+                    <option value="Kannada">Kannada</option>
+                    <option value="Malayalam">Malayalam</option>
+                    <option value="Bengali">Bengali</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Gujarati">Gujarati</option>
+                  </select>
+                  <div class="lang-dropdown-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <div class="form-group">
-            <div class="form-label-wrap">
-              <label class="form-label" for="detail-text">Any specific detail?</label>
-              <span class="label-optional">Optional</span>
-            </div>
+          
+          <!-- Card 4: Specific Details -->
+          <div class="form-sub-card">
+            <div class="form-group" style="margin-bottom: 0;">
+              <div class="form-label-wrap">
+                <label class="form-label" for="detail-text">Any specific detail?</label>
+                <span class="label-optional">Optional</span>
+              </div>
             <div class="textarea-mic-wrapper">
               <textarea class="textarea-custom" id="detail-text" placeholder="Example: website was delivered on time, design was clean, support was helpful, communication was clear..."></textarea>
               <button class="btn-mic" id="btn-mic" type="button" onclick="toggleSpeechRecognition()" aria-label="Voice-to-Text Dictation">
@@ -2513,6 +2534,7 @@
             </div>
           </div>
         </div>
+      </div>
 
         <!-- Friendly warnings -->
         <div class="warning-banner" id="form-warning">
@@ -2524,16 +2546,10 @@
 
         <!-- Navigation Buttons -->
         <div class="nav-buttons">
-          <button class="btn-secondary" id="btn-back" type="button" onclick="goBack()" style="visibility: hidden;">
+          <button class="btn-primary" id="btn-next" type="button" onclick="goNext()">
+            <span>Generate Review</span>
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-            <span>Back</span>
-          </button>
-          <button class="btn-primary btn-right" id="btn-next" type="button" onclick="goNext()">
-            <span>Next Step</span>
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7-7m7 7H3" />
             </svg>
           </button>
         </div>
@@ -2703,7 +2719,7 @@
         
         <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 320px; margin: 0 auto 2rem auto;">
           <button class="btn-primary" id="success-open-btn" onclick="openGoogleTab()">
-            <span>Open Google Review Page Again</span>
+            <span>Go to Google Review</span>
           </button>
           <button class="btn-secondary" onclick="restartAssistant()">
             <span>Write Another Review</span>
@@ -2754,27 +2770,7 @@
     };
 
     function saveSessionState() {
-      try {
-        const data = {
-          locationId: state.locationId,
-          currentStep: state.currentStep,
-          isDynamic: state.isDynamic,
-          questions: state.questions,
-          answers: state.answers,
-          service: state.service,
-          experience: state.experience,
-          likes: state.likes,
-          detail: state.detail,
-          style: state.style,
-          language: state.language,
-          apiVariants: state.apiVariants,
-          googleReviewLink: GOOGLE_REVIEW_LINK,
-          timestamp: Date.now()
-        };
-        localStorage.setItem('buzl_review_state', JSON.stringify(data));
-      } catch (e) {
-        console.warn('Failed to save session state:', e);
-      }
+      // Session auto-save disabled: always start fresh on reload
     }
 
     function clearSessionState() {
@@ -2859,32 +2855,12 @@
         detailEl.dispatchEvent(new Event('input'));
       }
 
-      // Restore style selection
-      const styleSimple = document.querySelector('[onclick="selectStyle(this, \'Simple\')"]');
-      if (styleSimple) styleSimple.classList.remove('selected');
-      const selectedStyleCard = document.querySelector(`[onclick*="selectStyle"][onclick*="'${state.style}'"]`);
-      if (selectedStyleCard) {
-        selectedStyleCard.parentElement.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
-        selectedStyleCard.classList.add('selected');
-      }
+      // Restore style and language selections directly in dropdowns
+      const styleSelect = document.getElementById('style-select');
+      if (styleSelect) styleSelect.value = state.style;
 
-      // Restore language selection
-      const langEnglishCard = document.getElementById('lang-card-english');
-      const langSelect = document.getElementById('lang-select-other');
-      const dropdownWrap = document.querySelector('.lang-dropdown-wrapper');
-      
-      if (langEnglishCard && langSelect) {
-        langEnglishCard.classList.remove('selected');
-        langSelect.value = "";
-        if (dropdownWrap) dropdownWrap.classList.remove('selected');
-
-        if (state.language === 'English') {
-          langEnglishCard.classList.add('selected');
-        } else {
-          langSelect.value = state.language;
-          if (dropdownWrap) dropdownWrap.classList.add('selected');
-        }
-      }
+      const langSelect = document.getElementById('lang-select');
+      if (langSelect) langSelect.value = state.language;
 
       // Restore Step 1 option selections
       if (state.isDynamic) {
@@ -2926,8 +2902,7 @@
         }
       }
 
-      // Go to the correct step
-      transitionStep(1, state.currentStep);
+
     }
 
     const BASIC_AUTH_HEADER = 'Basic MkJ1emxtcXBISmVWQm93MGR6UjlnUDMkdVFMeElBOmRnQVklbkgxTU5QZ092R2FZUmc2eW5vbU0zbWJKZ0dqciVaM0ZjUENKTnp2bSNLalYhSSVZOXRmJGJEYWNCZ1BJQUJ1emw=';
@@ -2956,15 +2931,13 @@
 
     let GOOGLE_REVIEW_LINK = 'https://search.google.com/local/writereview?placeid=ChIJK6_papbChmgRCAqryUDNfYU';
 
-    // Step navigation progress titles
-    const stepTitles = [
-      'Step 1 of 2 — Tell us about your experience',
-      'Step 2 of 2 — Customize your review'
-    ];
+
 
     // --- Dynamic API Helpers ---
 
     function extractLocationId() {
+      let locId = null;
+
       // 1. Check URL path segments (e.g. buzl.rclk.in/locn-dev-397) [PRIMARY]
       const path = window.location.pathname;
       const segments = path.split('/').filter(s => s.trim() !== '');
@@ -2972,14 +2945,23 @@
         const lastSegment = segments[segments.length - 1];
         // Ensure it's not index.html, static pages, or empty
         if (lastSegment && !lastSegment.includes('.') && lastSegment !== 'index' && lastSegment !== 'index.html') {
-          return lastSegment;
+          locId = lastSegment;
         }
       }
 
       // 2. Check URL search query parameters (?locationId=...) [FALLBACK]
-      const currentParams = new URLSearchParams(window.location.search);
-      let locId = currentParams.get('locationId') || currentParams.get('locId') || currentParams.get('placeid');
-      if (locId) return locId;
+      if (!locId) {
+        const currentParams = new URLSearchParams(window.location.search);
+        locId = currentParams.get('locationId') || currentParams.get('locId') || currentParams.get('placeid');
+      }
+
+      if (locId) {
+        locId = locId.trim();
+        if (/^\d+$/.test(locId)) {
+          locId = 'locn-dev-' + locId;
+        }
+        return locId;
+      }
 
       return null;
     }
@@ -3298,61 +3280,35 @@
       saveSessionState();
     }
 
-    // Step 2: Select Style
-    function selectStyle(element, styleVal) {
-      const siblingCards = element.parentElement.querySelectorAll('.option-card');
-      siblingCards.forEach(card => card.classList.remove('selected'));
-      element.classList.add('selected');
-      updateAriaChecked(siblingCards, element);
-      triggerPulse(element);
-      state.style = styleVal;
+    // Dropdown Style Selection
+    function selectStyleDropdown(selectElem) {
+      state.style = selectElem.value;
       clearWarning();
       saveSessionState();
     }
 
-    // Step 2: Select Language Card (English)
-    function selectLanguageCard(element, langVal) {
-      const dropdownWrap = document.querySelector('.lang-dropdown-wrapper');
-      if (dropdownWrap) {
-        dropdownWrap.classList.remove('selected');
-      }
-      
-      const selectElem = document.getElementById('lang-select-other');
-      if (selectElem) {
-        selectElem.value = "";
-      }
-      
-      const siblingCards = element.parentElement.querySelectorAll('.option-card');
-      siblingCards.forEach(card => card.classList.remove('selected'));
-      element.classList.add('selected');
-      updateAriaChecked(siblingCards, element);
-      triggerPulse(element);
-      
-      state.language = langVal;
-      clearWarning();
-      saveSessionState();
-    }
-
-    // Step 2: Select Language Dropdown (Other)
+    // Dropdown Language Selection
     function selectLanguageDropdown(selectElem) {
-      const selectedValue = selectElem.value;
-      if (!selectedValue) return;
-
-      const englishCard = document.getElementById('lang-card-english');
-      if (englishCard) {
-        englishCard.classList.remove('selected');
-        englishCard.setAttribute('aria-checked', 'false');
-      }
-
-      const dropdownWrap = selectElem.closest('.lang-dropdown-wrapper');
-      if (dropdownWrap) {
-        dropdownWrap.classList.add('selected');
-        triggerPulse(dropdownWrap);
-      }
-
-      state.language = selectedValue;
+      state.language = selectElem.value;
       clearWarning();
       saveSessionState();
+    }
+
+    // Toggle Collapsible Preferences Panel
+    function togglePreferencesPanel() {
+      const panel = document.getElementById('preferences-panel');
+      const btn = document.getElementById('btn-toggle-preferences');
+      if (!panel || !btn) return;
+      
+      const isOpen = panel.style.display !== 'none';
+      if (isOpen) {
+        panel.style.display = 'none';
+        btn.classList.remove('active');
+      } else {
+        panel.style.display = 'block';
+        btn.classList.add('active');
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     }
 
     // Navigation and validation
@@ -3360,108 +3316,35 @@
       const warningBanner = document.getElementById('form-warning');
       const warningMessage = document.getElementById('warning-message');
 
-      if (state.currentStep === 1) {
-        if (state.isDynamic) {
-          const unansweredCount = state.questions.length - Object.keys(state.answers).length;
-          if (unansweredCount > 0) {
-            warningMessage.textContent = 'Please answer all questions to proceed.';
-            warningBanner.style.display = 'flex';
-            return;
+      if (state.isDynamic) {
+        const unansweredCount = state.questions.length - Object.keys(state.answers).length;
+        if (unansweredCount > 0) {
+          warningMessage.textContent = 'Please answer all questions to proceed.';
+          warningBanner.style.display = 'flex';
+          
+          // Scroll to first unanswered dynamic question
+          const firstUnanswered = state.questions.find(q => !state.answers[q.qid]);
+          if (firstUnanswered) {
+            const card = document.querySelector(`[onclick*="selectDynamicResponse"][onclick*="'${firstUnanswered.qid}'"]`);
+            if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
-        } else {
-          if (!state.service || !state.experience) {
-            warningMessage.textContent = 'Please select a service and rate your experience to proceed.';
-            warningBanner.style.display = 'flex';
-            return;
-          }
+          return;
         }
-        clearWarning();
-        transitionStep(1, 2);
-      } else if (state.currentStep === 2) {
-        state.detail = document.getElementById('detail-text').value.trim();
-        clearWarning();
-        generateReviewProcess();
-      }
-    }
-
-    function goBack() {
-      if (state.currentStep === 2) {
-        transitionStep(2, 1);
-      }
-    }
-
-    function transitionStep(from, to) {
-      const fromEl = document.getElementById(`step-${from}`);
-      const toEl   = document.getElementById(`step-${to}`);
-      const goingForward = to > from;
-
-      state.currentStep = to;
-      saveSessionState();
-
-      // Update progress bar & button text immediately
-      const fillPercentage = to === 1 ? 50 : 100;
-      document.getElementById('progress-bar-fill').style.width = `${fillPercentage}%`;
-      document.getElementById('progress-text').textContent = stepTitles[to - 1];
-
-      const btnBack = document.getElementById('btn-back');
-      btnBack.style.visibility = to === 1 ? 'hidden' : 'visible';
-
-      const btnNext = document.getElementById('btn-next');
-      btnNext.querySelector('span').textContent = to === 2 ? 'Generate' : 'Next Step';
-
-      // Hide outgoing step — must set inline display:none to override any inline display:block
-      // set by a previous forward animation (classList alone can't win against inline styles)
-      fromEl.classList.remove('active');
-      fromEl.style.display = 'none';
-
-      if (goingForward) {
-        // 1. Show shimmer placeholder in place of incoming step
-        const shimmerHTML = `
-          <div id="step-shimmer-overlay" class="skeleton-wrapper" style="margin-bottom:0; padding: 0.5rem 0;">
-            <div class="skeleton-block" style="height:14px; width:55%; border-radius:6px;"></div>
-            <div class="skeleton-block" style="height:48px; border-radius:12px;"></div>
-            <div class="skeleton-block" style="height:14px; width:60%; border-radius:6px;"></div>
-            <div class="skeleton-block" style="height:48px; border-radius:12px;"></div>
-            <div class="skeleton-block" style="height:14px; width:50%; border-radius:6px;"></div>
-            <div class="skeleton-block" style="height:48px; border-radius:12px;"></div>
-          </div>`;
-
-        const shimmerEl = document.createElement('div');
-        shimmerEl.id = 'step-transition-shimmer';
-        shimmerEl.innerHTML = shimmerHTML;
-        shimmerEl.style.cssText = 'padding: 0;';
-        toEl.parentNode.insertBefore(shimmerEl, toEl);
-        shimmerEl.style.display = 'block';
-        shimmerEl.style.animation = 'slideInFromRight 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards';
-
-        // 2. After shimmer plays, remove it and slide in the real step
-        setTimeout(() => {
-          shimmerEl.remove();
-          toEl.style.display = 'block';
-          toEl.style.animation = 'none';
-          toEl.offsetHeight; // reflow
-          toEl.style.animation = 'slideInFromRight 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards';
-          setTimeout(() => {
-            toEl.style.animation = '';
-            toEl.style.display = '';  // clear inline, let CSS+active class control
-            toEl.classList.add('active');
-          }, 400);
-        }, 600);
-
       } else {
-        // Going back — no shimmer, just slide in from left
-        toEl.style.display = 'block';
-        toEl.style.animation = 'none';
-        toEl.offsetHeight;
-        toEl.style.animation = 'slideInFromLeft 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards';
-        setTimeout(() => {
-          toEl.style.animation = '';
-          toEl.style.display = '';  // clear inline, let CSS+active class control
-          toEl.classList.add('active');
-        }, 400);
+        if (!state.service || !state.experience) {
+          warningMessage.textContent = 'Please select a service and rate your experience to proceed.';
+          warningBanner.style.display = 'flex';
+          
+          // Scroll to the static questions section
+          const staticContainer = document.getElementById('static-questions-container');
+          if (staticContainer) staticContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
       }
 
-      scrollToForm();
+      state.detail = document.getElementById('detail-text').value.trim();
+      clearWarning();
+      generateReviewProcess();
     }
 
     function clearWarning() {
@@ -4684,9 +4567,6 @@
       });
     }
 
-    let redirectTimer = null;
-    let redirectSecondsLeft = 4;
-
     function copyAndOpenGoogle() {
       const isConfirmed = document.getElementById('checkbox-confirm').checked;
       if (!isConfirmed) {
@@ -4709,49 +4589,16 @@
           console.warn('Background review save failed:', err);
         });
         
-        // 3. Start tutorial countdown before opening Google
-        startRedirectCountdown();
+        // 3. Open Google review page instantly
+        openGoogleTab();
       }).catch(err => {
         showToast('Failed to copy. Opening Google review page...', 'error');
-        startRedirectCountdown();
+        transitionToSuccess();
+        openGoogleTab();
       });
     }
 
-    function startRedirectCountdown() {
-      if (redirectTimer) clearInterval(redirectTimer);
-      
-      redirectSecondsLeft = 4;
-      const btn = document.getElementById('success-open-btn');
-      if (btn) {
-        btn.querySelector('span').textContent = `Opening Google in ${redirectSecondsLeft}s...`;
-      }
-
-      redirectTimer = setInterval(() => {
-        redirectSecondsLeft--;
-        if (redirectSecondsLeft <= 0) {
-          clearInterval(redirectTimer);
-          redirectTimer = null;
-          openGoogleTab();
-        } else {
-          if (btn) {
-            btn.querySelector('span').textContent = `Opening Google in ${redirectSecondsLeft}s...`;
-          }
-        }
-      }, 1000);
-    }
-
     function openGoogleTab() {
-      // Clear redirect countdown if manually clicked or automatically fired
-      if (redirectTimer) {
-        clearInterval(redirectTimer);
-        redirectTimer = null;
-      }
-      
-      const btn = document.getElementById('success-open-btn');
-      if (btn) {
-        btn.querySelector('span').textContent = 'Open Google Review Page Again';
-      }
-
       window.open(GOOGLE_REVIEW_LINK, '_blank');
     }
 
@@ -4876,7 +4723,11 @@
       const err = document.getElementById('manual-input-error');
       if (!input) return;
       
-      const code = input.value.trim();
+      let code = input.value.trim();
+      if (/^\d+$/.test(code)) {
+        code = 'locn-dev-' + code;
+      }
+
       if (code.length < 3) {
         if (err) err.style.display = 'block';
         return;
@@ -4921,11 +4772,7 @@
       // Clear auto-save session state
       clearSessionState();
 
-      // Stop speech/redirect timer if active
-      if (redirectTimer) {
-        clearInterval(redirectTimer);
-        redirectTimer = null;
-      }
+
 
       if (isListening && recognitionInstance) {
         recognitionInstance.stop();
@@ -4971,18 +4818,18 @@
         updateBrandUI('𝐁𝐮𝐳𝐥 𝐃𝐢𝐠𝐢𝐭𝐚𝐥 𝐒𝐨𝐥𝐮𝐭𝐢𝐨𝐧𝐬');
       }
 
-      // Re-apply selected class to default choices
-      const styleSimple = document.querySelector('[onclick="selectStyle(this, \'Simple\')"]');
-      if (styleSimple) styleSimple.classList.add('selected');
+      // Reset dropdown values to default choices
+      const styleSelect = document.getElementById('style-select');
+      if (styleSelect) styleSelect.value = 'Simple';
       
-      const langEnglish = document.getElementById('lang-card-english');
-      if (langEnglish) langEnglish.classList.add('selected');
+      const langSelect = document.getElementById('lang-select');
+      if (langSelect) langSelect.value = 'English';
 
-      const selectElem = document.getElementById('lang-select-other');
-      if (selectElem) selectElem.value = "";
-
-      const dropdownWrap = document.querySelector('.lang-dropdown-wrapper');
-      if (dropdownWrap) dropdownWrap.classList.remove('selected');
+      // Collapse preferences panel
+      const panel = document.getElementById('preferences-panel');
+      if (panel) panel.style.display = 'none';
+      const toggleBtn = document.getElementById('btn-toggle-preferences');
+      if (toggleBtn) toggleBtn.classList.remove('active');
 
       const detailText = document.getElementById('detail-text');
       detailText.value = '';
@@ -5003,7 +4850,6 @@
       document.getElementById('progress-wrapper').style.display = 'block';
       document.getElementById('assistant-form').style.display = 'block';
       
-      transitionStep(2, 1);
       scrollToForm();
     }
 
@@ -5102,19 +4948,13 @@
       // Extract locationId
       const currentLocId = extractLocationId();
       
-      // Attempt to restore session state
-      const hasSaved = restoreSessionState();
-      
-      if (hasSaved && state.locationId === currentLocId) {
-        applyRestoredStateToDOM();
+      // Always start fresh: clear any old session state
+      clearSessionState();
+      state.locationId = currentLocId;
+      if (state.locationId) {
+        loadDynamicQuestions();
       } else {
-        clearSessionState();
-        state.locationId = currentLocId;
-        if (state.locationId) {
-          loadDynamicQuestions();
-        } else {
-          showLandingPage();
-        }
+        showLandingPage();
       }
     });
 
