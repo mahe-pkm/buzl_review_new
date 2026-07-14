@@ -15,8 +15,8 @@ Desktop.ini
 # Project custom ignores
 Ver2/
 Example folder/
-# Compiled output - do not commit
-site-generator/dist/
+# Compiled output
+# site-generator/dist/ (now tracked)
 *.pdf
 diagnose.html
 *.pem
